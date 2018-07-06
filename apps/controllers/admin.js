@@ -182,6 +182,9 @@ router.post("/signin", (req, res) => {
 				//chọn ra user đầu tiên
 				let user = users[0]
 
+				//So sánh password từ req.body với password phía server đã đc mã hóa
+				//Trong đó params.password là từ req.body
+				//user.password là  lấy từ trên database
 				helper
 					.comparePassword(params.password, user.password)
 					.then(status => {
