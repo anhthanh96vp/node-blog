@@ -4,6 +4,9 @@ const router = express.Router()
 // import users để kết nối đến database
 import userMd from "../models/user"
 
+//import post để kết nối tới database
+import postMd from "../models/post"
+
 // import helper để đẩy password đã được mã hóa
 import helper from "../helpers/helper"
 
@@ -12,8 +15,17 @@ import { validateEmail } from "../helpers/validation"
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /admin
 router.get("/", (req, res) => {
-	res.json({
-		message: "This is Admin Page"
+	let data = postMd.getAllPosts()
+	data.then(posts => {
+		let data = {
+			posts: posts,
+			error: false
+		}
+		res.render("admin/dashboard", { data: data })
+	}).catch(error => {
+		res.render("admin/dashboard", {
+			data: { error: "Lấy dữ liệu bài đăng lỗi" }
+		})
 	})
 })
 
@@ -189,6 +201,10 @@ router.post("/signin", (req, res) => {
 					.comparePassword(params.password, user.password)
 					.then(status => {
 						if (status) {
+							// đẩy thông tin user vào session
+							req.session.user = user
+							console.log(req.session.user)
+
 							res.redirect("/admin/")
 						} else {
 							res.render("signin", {
@@ -201,7 +217,7 @@ router.post("/signin", (req, res) => {
 					.catch(err => {
 						res.render("signin", {
 							data: {
-								error: "Lỗi trong quá trình so sánh pasword"
+								error: "Lỗi trong quá trình phân tích password"
 							}
 						})
 					})
