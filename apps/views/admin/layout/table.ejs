@@ -1,4 +1,4 @@
-<div class="col-lg-6">
+<div class="col-lg-12" style="padding-top: 20px;">
     <div class="panel panel-default">
         <div class="panel-heading">
             Posts
@@ -20,7 +20,8 @@
                     </thead>
                     <tbody>
                         <% if(data && data.posts){%>
-                            <% for(let i=0;i<data.posts.length;i++) {%>
+                            <% for(let i=0;i<data.posts.length;i++) 
+                                {%>
                                 <tr>
                                     <td>
                                         <%= data.posts[i].id%>
@@ -40,8 +41,8 @@
                                     <td>
                                         <%= data.posts[i].updated_at%>
                                     </td>
-                                    <td>
-                                        <a href="" class="btn btn-danger">Edit</a>
+                                    <td style="display: flex; justify-content: space-between">
+                                        <a href="/admin/post/edit/<%= data.posts[i].id%>" style="margin-right: 5px" class="btn btn-info">Edit</a>
                                         <a href="" class="btn btn-danger">Delete</a>
 
                                     </td>

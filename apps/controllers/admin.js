@@ -13,21 +13,9 @@ import helper from "../helpers/helper"
 // import validateEmail để định dạng dữ liệu đầu vào
 import { validateEmail } from "../helpers/validation"
 
-// Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /admin
-router.get("/", (req, res) => {
-	let data = postMd.getAllPosts()
-	data.then(posts => {
-		let data = {
-			posts: posts,
-			error: false
-		}
-		res.render("admin/dashboard", { data: data })
-	}).catch(error => {
-		res.render("admin/dashboard", {
-			data: { error: "Lấy dữ liệu bài đăng lỗi" }
-		})
-	})
-})
+//-----------------------------------------------------
+
+//PHẦN SIGN UP
 
 router.get("/signup", (req, res) => {
 	res.render("signup", { data: {} })
@@ -38,20 +26,20 @@ router.post("/signup", (req, res) => {
 	// Lấy user từ request body khi đẩy dữ liệu
 	let user = req.body
 
-	//Xử lý khi submit nếu trường email không đúng định dạng thì error
+	//Xử lý khi submit nếu trường email không đúng định dạng thì err
 	if (!validateEmail(user.email)) {
 		res.render("signup", {
 			data: {
-				error: "Hãy nhập đúng định dạng email"
+				err: "Hãy nhập đúng định dạng email"
 			}
 		})
 	}
 
-	//Xử lý khi submit nếu nhập password không giống nhau thì error
+	//Xử lý khi submit nếu nhập password không giống nhau thì err
 	if (user.password != user.repassword && validateEmail(user.email)) {
 		res.render("signup", {
 			data: {
-				error: "Nhập lại password cho chính xác"
+				err: "Nhập lại password cho chính xác"
 			}
 		})
 	}
@@ -84,7 +72,7 @@ router.post("/signup", (req, res) => {
 	// 		})
 	// 		.catch(err => {
 	// 			res.render("signup", {
-	// 				error: "Gặp lỗi khi insert dữ liệu lên DB"
+	// 				err: "Gặp lỗi khi insert dữ liệu lên DB"
 	// 			});
 	// 		});
 	// });
@@ -117,7 +105,7 @@ router.post("/signup", (req, res) => {
 				.catch(err => {
 					res.render("signup", {
 						data: {
-							error: "Gặp lỗi khi insert dữ liệu lên DB"
+							err: "Gặp lỗi khi insert dữ liệu lên DB"
 						}
 					})
 				})
@@ -127,12 +115,15 @@ router.post("/signup", (req, res) => {
 		.catch(err => {
 			res.render("signup", {
 				data: {
-					error: "Mã hóa password thất bại"
+					err: "Mã hóa password thất bại"
 				}
 			})
 		})
 })
 
+//----------------------------------------------
+
+// PHẦN SIGN IN
 router.get("/signin", (req, res) => {
 	res.render("signin", { data: {} })
 })
@@ -146,7 +137,7 @@ router.post("/signin", (req, res) => {
 	//Check lỗi nếu không đúng định dạng email bằng file validate
 	if (!validateEmail(params.email)) {
 		res.render("signin", {
-			data: { error: "Hãy nhập đúng định dạng email" }
+			data: { err: "Hãy nhập đúng định dạng email" }
 		})
 	} else {
 		// //**KIỂU ĐỒNG BỘ
@@ -172,14 +163,14 @@ router.post("/signin", (req, res) => {
 		// 			// req.session.user = user;
 		// 			res.render("signin", {
 		// 				data: {
-		// 					error: "Password nhập vào không chính xác"
+		// 					err: "Password nhập vào không chính xác"
 		// 				}
 		// 			})
 		// 		}
 		// 	})
 		// } else {
 		// 	res.render("signin", {
-		// 		data: { error: "Email bạn nhập vào không chính xác" }
+		// 		data: { err: "Email bạn nhập vào không chính xác" }
 		// 	})
 		// }
 
@@ -209,7 +200,7 @@ router.post("/signin", (req, res) => {
 						} else {
 							res.render("signin", {
 								data: {
-									error: "Password nhập vào không chính xác"
+									err: "Password nhập vào không chính xác"
 								}
 							})
 						}
@@ -217,16 +208,106 @@ router.post("/signin", (req, res) => {
 					.catch(err => {
 						res.render("signin", {
 							data: {
-								error: "Lỗi trong quá trình phân tích password"
+								err: "Lỗi trong quá trình phân tích password"
 							}
 						})
 					})
 			})
 			.catch(err => {
 				res.render("signin", {
-					data: { error: "Email nhập vào không chính xác" }
+					data: { err: "Email nhập vào không chính xác" }
 				})
 			})
+	}
+})
+
+//----------------------------------------------
+
+// PHẦN POST ALL PAGE ADMIN
+
+// Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /admin
+router.get("/", (req, res) => {
+	postMd
+		.getAllPosts()
+		//Promise vào resolve trả data posts
+		.then(posts => {
+			let data = {
+				posts: posts,
+				err: false
+			}
+			res.render("admin/dashboard", { data: data })
+		})
+		//Xử lý lỗi nếu promise vào reject
+		.catch(err => {
+			res.render("admin/dashboard", {
+				data: { err: "Lấy dữ liệu bài đăng lỗi" }
+			})
+		})
+})
+
+//------------------------------------------------
+
+// PHẦN ADD NEW POST
+
+router.get("/post/new", (req, res) => {
+	res.render("admin/post/new", { data: { err: false } })
+})
+
+//Tương tự như bên post user
+router.post("/post/new", (req, res) => {
+	let params = req.body
+
+	//check lỗi
+	if (
+		params.title.trim() == 0 ||
+		params.content.trim() == 0 ||
+		params.author.trim() == 0
+	) {
+		res.render("admin/post/new", {
+			data: { error: "Bạn phải nhập đầy đủ các trường" }
+		})
+	} else {
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = postMd.addPost(params)
+
+		data.then(result => {
+			res.redirect("/admin")
+		}).catch(err => {
+			res.render("admin/post/new", {
+				data: { error: "Không thể post bài đăng" }
+			})
+		})
+	}
+})
+
+//------------------------------------------------
+
+// PHẦN EDIT POST
+
+router.get("/post/edit/:id", (req, res) => {
+	let params = req.params
+	let id = params.id
+	let data = postMd.getPostById(id)
+
+	if (data) {
+		data.then(posts => {
+			//chọn thằng post giống id đầu tiên
+			let post = posts[0]
+
+			let data = { post: post, error: false }
+
+			res.render("admin/post/edit", { data: data })
+		}).catch(err => {
+			let data = { error: "Không có bài viết nào như vậy" }
+
+			res.render("admin/post/edit", { data: data })
+		})
+	} else {
+		let data = { error: "Không có bài viết nào như vậy" }
+		res.render("admin/post/edit", { data: data })
 	}
 })
 
