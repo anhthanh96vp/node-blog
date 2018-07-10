@@ -65,8 +65,36 @@ const getPostById = id => {
 	}
 	return false
 }
+
+const updatePost = params => {
+	if (params) {
+		let defer = q.defer()
+
+		let query = conn.query(
+			"UPDATE posts SET title = ?, content = ?, author = ?, updated_at = ? WHERE id = ?",
+			[
+				params.title,
+				params.content,
+				params.author,
+				new Date(),
+				params.id
+			],
+			(err, result) => {
+				if (err) {
+					defer.reject(err)
+				} else {
+					defer.resolve(result)
+				}
+			}
+		)
+		return defer.promise
+	}
+	return false
+}
+
 module.exports = {
 	getAllPosts,
 	addPost,
-	getPostById
+	getPostById,
+	updatePost
 }

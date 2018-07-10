@@ -311,4 +311,19 @@ router.get("/post/edit/:id", (req, res) => {
 	}
 })
 
+router.put("/post/edit", (req, res) => {
+	let params = req.body
+	data = postMd.updatePost(params)
+
+	if (data) {
+		data.then(result => {
+			res.json({ status_code: 200 })
+		}).catch(err => {
+			res.json({ status_code: 500 })
+		})
+	} else {
+		res.json({ status_code: 500 })
+	}
+})
+
 module.exports = router
