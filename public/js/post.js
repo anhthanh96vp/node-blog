@@ -18,21 +18,20 @@ function Post() {
 				location.port +
 				"/admin/post/edit"
 
-			alert(`baseUrl = ${JSON.stringify(url)}`)
-
 			$.ajax({
 				url: url,
 				type: "PUT",
 				data: params,
 				dataType: "json",
 				success: function(res) {
-					alert("success11")
 					if (res && res.status_code == 200) {
 						location.reload()
 					}
 				},
 				error: function(request, msg, error) {
-					alert(`error = ${JSON.stringify(error)}`)
+					if (res && res.status_code == 500) {
+						alert(`error = ${JSON.stringify(error)}`)
+					}
 				}
 			})
 		})
@@ -53,6 +52,11 @@ function Post() {
 				success: function(res) {
 					if (res && res.status_code == 200) {
 						location.reload()
+					}
+				},
+				error: function(request, msg, error) {
+					if (res && res.status_code == 404) {
+						alert(`error = ${JSON.stringify(error)}`)
 					}
 				}
 			})

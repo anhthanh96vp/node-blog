@@ -29,14 +29,14 @@
                     <form id="signupform" class="form-horizontal" role="form" method="POST" action="/admin/signup">
 
                         <div id="signupalert" style="
-                        <% if (!data || !data.error) { %> display:none;
+                        <% if (!data || !data.err) { %> display:none;
                             <% } %>" class="alert alert-danger">
 
                             <p>Error:</p>
 
-                            <% if (data && data.error) {%>
+                            <% if (data && data.err) {%>
                                 <span>
-                                    <%= data.error %>
+                                    <%= data.err %>
                                 </span>
                                 <%} %>
 

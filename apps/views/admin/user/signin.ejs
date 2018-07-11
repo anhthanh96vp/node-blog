@@ -23,9 +23,9 @@
 
                 <div style="padding-top:30px" class="panel-body">
 
-                    <% if(data && data.error) {%>
+                    <% if(data && data.err) {%>
                         <div id="login-alert" class="alert alert-danger col-sm-12">
-                            <%= data.error%>
+                            <%= data.err%>
                         </div>
                         <%}%>
                             <form id="loginform" class="form-horizontal" role="form" method="POST" action="">

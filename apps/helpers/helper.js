@@ -5,7 +5,6 @@ import bcrypt from "bcrypt"
 import config from "config"
 
 //module q để thực hiện promise
-import q from "q"
 
 //Hàm mã hóa password
 const hashPassword = password => {
@@ -24,15 +23,17 @@ const hashPassword = password => {
 
 	//* MÃ HÓA KIỂU PASSWORD BẤT ĐỒNG BỘ
 
-	const defer = q.defer()
-	bcrypt.hash(password, saltRounds, (err, hash) => {
-		if (err) {
-			defer.reject(error)
-		} else {
-			defer.resolve(hash)
-		}
+	let promise = new Promise((resolve, reject) => {
+		bcrypt.hash(password, saltRounds, (err, hash) => {
+			if (err) {
+				reject(error)
+			} else {
+				resolve(hash)
+			}
+		})
 	})
-	return defer.promise
+
+	return promise
 }
 
 const comparePassword = (password, hash) => {
