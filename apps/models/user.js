@@ -51,4 +51,24 @@ const getUserByEmail = email => {
 	}
 	return false
 }
-module.exports = { addUser, getUserByEmail }
+
+const getAllUsers = () => {
+	let defer = q.defer()
+
+	// hàm xử lý khí connect server sau đó select user trên database
+	let query = conn.query(
+		//SHOW tất caqr bảng users
+		"SELECT * FROM users",
+		(err, users) => {
+			if (err) {
+				defer.reject(err)
+			} else {
+				//Trả về mảng chứa data users đều có email như nhập vào
+				defer.resolve(users)
+			}
+		}
+	)
+	return defer.promise
+}
+
+module.exports = { addUser, getUserByEmail, getAllUsers }

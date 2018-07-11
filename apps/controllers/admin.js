@@ -283,7 +283,7 @@ router.post("/post/new", (req, res) => {
 	}
 })
 
-//------------------------------------------------
+//------------------------------------------------------
 
 // PHẦN EDIT POST
 
@@ -311,13 +311,17 @@ router.get("/post/edit/:id", (req, res) => {
 	}
 })
 
+//------------------------------------------------------
+
+//PHẦN UPDATE POST
+
 router.put("/post/edit", (req, res) => {
 	let params = req.body
-	data = postMd.updatePost(params)
+	let data = postMd.updatePost(params)
 
 	if (data) {
 		data.then(result => {
-			res.json({ status_code: 200 })
+			res.json({ status_code: 200, data })
 		}).catch(err => {
 			res.json({ status_code: 500 })
 		})
@@ -326,4 +330,50 @@ router.put("/post/edit", (req, res) => {
 	}
 })
 
+//------------------------------------------------------
+
+// PHẦN DELETE POST
+
+router.delete("/post/delete", (req, res) => {
+	let post_id = req.body.id
+
+	let data = postMd.deletePost(post_id)
+
+	if (data) {
+		data.then(result => {
+			res.json({ status_code: 200 })
+		}).catch(err => {
+			res.json({ status_code: 404 })
+		})
+	} else {
+		res.json({ status_code: 404 })
+	}
+})
+
+//------------------------------------------------------
+
+// CHUYỂN HƯỚNG TRANG admin/post --> admin
+
+router.get("/post", (req, res) => {
+	res.redirect("/admin")
+})
+
+// DANH SÁCH USER
+router.get("/user", (req, res) => {
+	let data = userMd.getAllUsers()
+
+	data.then(users => {
+		let data = {
+			users: users,
+			error: false
+		}
+
+		res.render("admin/user/user", { data: data })
+	}).catch(err => {
+		let data = {
+			error: "Could not get user info"
+		}
+		res.render("admin/user/user", { data: data })
+	})
+})
 module.exports = router

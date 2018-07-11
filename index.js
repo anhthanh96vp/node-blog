@@ -21,7 +21,8 @@ app.use(
 		secret: config.get("secret_key"), // mã bí mật bên file config
 		resave: false,
 		saveUninitialized: true,
-		cookie: { secure: true }
+		//cookie là false có thể cho mình  save lữ diệu
+		cookie: { secure: false }
 	})
 )
 

@@ -25,24 +25,21 @@ const getAllPosts = () => {
 //hàm add thêm bài post
 //Tương tự như bên post user
 const addPost = params => {
-	if (params) {
-		let defer = q.defer()
-
+	let promise = new Promise((resolve, reject) => {
 		let query = conn.query(
 			"INSERT INTO posts SET ?",
 			params,
 			(err, result) => {
 				if (err) {
-					console.log(params)
-					defer.reject(err)
+					reject(err)
 				} else {
-					defer.resolve(result)
+					resolve(result)
 				}
 			}
 		)
-		return defer.promise
-	}
-	return false
+	})
+	// Return the promise
+	return promise
 }
 
 const getPostById = id => {
@@ -92,9 +89,29 @@ const updatePost = params => {
 	return false
 }
 
+const deletePost = id => {
+	if (id) {
+		let defer = q.defer()
+
+		let query = conn.query(
+			"DELETE FROM posts WHERE id = ?",
+			id,
+			(err, result) => {
+				if (err) {
+					defer.reject(err)
+				} else {
+					defer.resolve(result)
+				}
+			}
+		)
+		return defer.promise
+	}
+	return false
+}
 module.exports = {
 	getAllPosts,
 	addPost,
 	getPostById,
-	updatePost
+	updatePost,
+	deletePost
 }
