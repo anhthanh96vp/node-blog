@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+
+            <h2 class="section-heading">
+                <% if(data && data.post.title){%>
+                    <%= data.post.title%>
+
+                        <%} %>
+            </h2>
+
+            <a href="#">
+                <img class="img-fluid" src="https://www.topitworks.com/blogs/wp-content/uploads/2017/05/JavaScript-banner-1024x448.gif" alt="">
+            </a>
+
+            <p>
+                <% if(data && data.post.content){%>
+                    <%- data.post.content%>
+
+                        <%} %>
+            </p>
+
+
+            <div class="text-right">
+                <a href="">
+                    <% if(data && data.post.author){%>
+                        <%= data.post.author%>
+
+                            <%} %>
+                </a>
+            </div>
+
+
+            <div class="text-center">
+                <% if(data && data.post.created_at){%>
+                    <%= data.post.created_at%>
+
+                        <%} %>
+            </div>
+
+
+        </div>
+    </div>
+</div>

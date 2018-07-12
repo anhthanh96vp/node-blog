@@ -11,7 +11,7 @@
           <div class="posts__detail__title">
             <div>
               <h3>
-                <a href="">
+                <a href="/blog/post/<%= data.posts[i].id %>">
                   <%= data.posts[i].title%>
                 </a>
               </h3>
@@ -54,7 +54,7 @@
           </div>
           <div class="posts__detail__content">
             <p>
-              <%= data.posts[i].content%>
+              <%- data.posts[i].content%>
             </p>
           </div>
           <div class="posts__detail__time">

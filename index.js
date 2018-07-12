@@ -1,7 +1,7 @@
 import express from "express"
 import config from "config"
 import bodyParser from "body-parser"
-import postRouter from "./apps/routersPG/postRouter"
+import socketio from "socket.io"
 //Sử dụng cái này phải cài đặt express
 import session from "express-session"
 
@@ -47,6 +47,13 @@ const host = config.get("server.host")
 const portMYSQL = config.get("server.portMYSQL")
 // Tạo cổng kết nối
 //Cài thêm module config
-app.listen(portMYSQL, host, () => {
+let server = app.listen(portMYSQL, host, () => {
 	console.log(`Server is running: ${host} ${portMYSQL}`)
 })
+
+// Tích hợp socketio vào ứng dụng
+let io = socketio(server)
+
+//import file socketcontrol và truyền biến io vào xử lý
+// import socketcontrol from "./apps/common/socketcontrol"
+let socketcontrol = require("./apps/common/socketcontrol")(io)
