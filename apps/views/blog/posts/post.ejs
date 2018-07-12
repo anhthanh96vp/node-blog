@@ -1,0 +1,70 @@
+<section class="container">
+  <% if(data && data.posts){%>
+    <% for(let i = 0; i< data.posts.length; i++ ){%>
+      <div class="posts">
+        <div class="posts__avatar">
+          <a href="">
+            <img src="/static/imgs/avatar.jpg" alt="">
+          </a>
+        </div>
+        <div class="posts__detail">
+          <div class="posts__detail__title">
+            <div>
+              <h3>
+                <a href="">
+                  <%= data.posts[i].title%>
+                </a>
+              </h3>
+            </div>
+            <div>
+              <ul>
+                <li>
+                  <a href="">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                  <p> 1000</p>
+                </li>
+                <li>
+                  <a href="">
+                    <i class="fa fa-thumbs-up"></i>
+                  </a>
+                  <p> 1000</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="posts__detail__tag">
+            <ul>
+              <li>
+                <a href="">javascript</a>
+              </li>
+              <li>
+                <a href="">html</a>
+              </li>
+              <li>
+                <a href="">css</a>
+              </li>
+              <li>
+                <a href="">bootstrap</a>
+              </li>
+              <li>
+                <a href="">vuejs</a>
+              </li>
+            </ul>
+          </div>
+          <div class="posts__detail__content">
+            <p>
+              <%= data.posts[i].content%>
+            </p>
+          </div>
+          <div class="posts__detail__time">
+            <p>
+              <%= data.posts[i].author%> viết
+                <%= data.posts[i].created_at%>
+            </p>
+          </div>
+        </div>
+      </div>
+      <%}%>
+        <%}%>
+</section>

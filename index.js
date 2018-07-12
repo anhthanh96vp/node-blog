@@ -1,7 +1,7 @@
 import express from "express"
 import config from "config"
 import bodyParser from "body-parser"
-
+import postRouter from "./apps/routersPG/postRouter"
 //Sử dụng cái này phải cài đặt express
 import session from "express-session"
 
@@ -41,15 +41,12 @@ app.use("/static", express.static(__dirname + "/public"))
 const controllers = require(__dirname + "/apps/controllers")
 
 // Include controllers
-
 app.use(controllers)
 
 const host = config.get("server.host")
-const port = config.get("server.port")
+const portMYSQL = config.get("server.portMYSQL")
 // Tạo cổng kết nối
 //Cài thêm module config
-app.listen(port, host, () => {
-	console.log(`Server is running: ${host} ${port}`)
+app.listen(portMYSQL, host, () => {
+	console.log(`Server is running: ${host} ${portMYSQL}`)
 })
-
-module.exports = { host, port }
