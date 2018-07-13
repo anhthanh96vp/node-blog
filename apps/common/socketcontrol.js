@@ -11,7 +11,7 @@ module.exports = io => {
 		socket.on("adduser", username => {
 			//Thông báo gửi tới chính bản thân user
 			var data = {
-				sender: "SERVER",
+				sender: "SERVER-CONNECT",
 				message: "Bạn đã tham gia phòng chat"
 			}
 			//Đẩy data thông báo qua socket.on update_message
@@ -19,8 +19,8 @@ module.exports = io => {
 
 			//Thông báo gửi tới tất cả user đang online trừ bản thân
 			var data = {
-				sender: "SERVER",
-				message: `${username} đã tham gia phòng chat`
+				sender: "SERVER-NOTIFY",
+				message: `${username} đã tham gia room chat`
 			}
 			//Đẩy data thông báo qua socket.on update_message
 			socket.broadcast.emit("updateMessage", data)
@@ -34,16 +34,28 @@ module.exports = io => {
 
 		//Sự kiện gửi tin nhắn
 		socket.on("sendMessage", message => {
-			var data = {
-				sender: "You",
-				message: message
-			}
+			var data = { sender: "You", message: message }
 
 			socket.emit("updateMessage", data)
 
-			var data = {
-				sender: socket.username,
-				message: message
+			var data = { sender: socket.username, message: message }
+
+			socket.broadcast.emit("updateMessage", data)
+		})
+
+		//Sự kiện thông báo user đã rời phòng chat khi dissconnect
+		socket.on("disconnect", () => {
+			//Delete username
+			for (let user of usernames) {
+				if (usernames[user] == socket.username) {
+					usernames.splice(user, 1)
+					console.log(user)
+				}
+			}
+
+			let data = {
+				sender: "SERVER-DISCONNECT",
+				message: `${socket.username} đã thoát khỏi room chat`
 			}
 
 			socket.broadcast.emit("updateMessage", data)
