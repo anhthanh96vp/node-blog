@@ -41,6 +41,8 @@ $("form").submit(() => {
 	return false
 })
 
+//Click send bằng phím enter
 $("#message").keypress(e => {
+	//Enter event
 	if (e.which == 13) $("#btn-chat").trigger("click")
 })
