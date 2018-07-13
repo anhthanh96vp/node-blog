@@ -9,54 +9,7 @@
 
     <%-include ../blog/layout/head%>
 
-        <style>
-            body {
-                margin: 0 auto;
-                max-width: 800px;
-                padding: 0 20px;
-            }
-
-            .container {
-                border: 2px solid #dedede;
-                background-color: #f1f1f1;
-                padding: 10px;
-                margin: 10px 0;
-            }
-
-            .darker {
-                border-color: #ccc;
-                background-color: #ddd;
-            }
-
-            .container::after {
-                content: "";
-                clear: both;
-                display: table;
-            }
-
-            .container img {
-                float: left;
-                max-width: 60px;
-                width: 100%;
-                margin-right: 20px;
-            }
-
-            .container img.right {
-                float: right;
-                margin-left: 20px;
-                margin-right: 0;
-            }
-
-            .time-right {
-                float: right;
-                color: #aaa;
-            }
-
-            .time-left {
-                float: left;
-                color: #999;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/css/chat.css">
 </head>
 
 <body>
@@ -79,7 +32,7 @@
 
     <div class="panel-footer">
         <div class="input-group">
-            <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+            <input id="btn-input" type="text" class="form-control input-sm" id="message" placeholder="Type your message here..." />
             <span class="input-group-btn">
                 <button style="padding: 11px" class="btn btn-success btn-sm" id="btn-chat">
                     Send</button>
@@ -91,27 +44,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- sử dụng thư viện socket io để kết nối client lên server -->
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script type="text/javascript">
-        let socket = io.connect("http://localhost:8000")
+    <script type="text/javascript" src="/static/js/chat.js">
 
-        //Thông báo đã connect đến server
-        socket.on("connect", () => {
-            console.log("User is connecting to server")
-
-            //Sự kiện hỏi tên người dùng khi connect đến server
-            let username = prompt("What is your name?")
-
-            //emit là hàm gửi dữ liệu bằng 1 sự kiện
-            //Gửi username bằng sự kiện adduser
-            socket.emit("adduser", username)
-
-            console.log(data)
-            //Lắng nghe update_message event
-
-            socket.on("update_message", data => {
-                $("#conversation").append(`<li><b> ${data.sender}: </b> ${data.message}</li>`)
-            })
-        })
     </script>
 </body>
 

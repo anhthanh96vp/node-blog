@@ -4,28 +4,49 @@ module.exports = io => {
 	let usernames = []
 
 	//tạo cổng server lắng nghe client
-	io.sockets.on("connection", function(socket) {
+	io.sockets.on("connection", socket => {
 		console.log("Have a new user connected")
 
-		//Sự kiện adduser
-
+		//Sự kiện adduser thông báo user vào room chat
 		socket.on("adduser", username => {
-			socket.username = username
-			usernames.push(username)
-
+			//Thông báo gửi tới chính bản thân user
 			var data = {
-				server: "SERVER",
+				sender: "SERVER",
 				message: "Bạn đã tham gia phòng chat"
 			}
+			//Đẩy data thông báo qua socket.on update_message
+			socket.emit("updateMessage", data)
 
-			socket.emit("update_message", data)
-
+			//Thông báo gửi tới tất cả user đang online trừ bản thân
 			var data = {
-				server: "SERVER",
+				sender: "SERVER",
 				message: `${username} đã tham gia phòng chat`
 			}
+			//Đẩy data thông báo qua socket.on update_message
+			socket.broadcast.emit("updateMessage", data)
 
-			socket.broadcast.emit("update_message", data)
+			// -----------------------------------------------------
+
+			//Save vào để sử dụng hàm bên dưới
+			socket.username = username
+			usernames.push(username)
+		})
+
+		//Sự kiện gửi tin nhắn
+		socket.on("sendMessage", message => {
+			var data = {
+				sender: "You",
+				message: message
+			}
+
+			socket.emit("updateMessage", data)
+
+			var data = {
+				sender: socket.username,
+				message: message
+			}
+
+			socket.broadcast.emit("updateMessage", data)
 		})
 	})
 }

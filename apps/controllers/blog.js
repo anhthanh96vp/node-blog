@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 		res.render("blog/index", { data: data })
 	}).catch(err => {
 		let result = { err: "Không tìm thấy dữ liệu bài post" }
-		res.render("blog/index", { data: data })
+		res.render("blog/index", { data: data });
 	})
 })
 
