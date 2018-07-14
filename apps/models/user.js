@@ -1,5 +1,4 @@
 //import sử dụng hàm connect bên file database
-
 import db from "../common/database"
 const conn = db.getConnection()
 
@@ -55,7 +54,7 @@ const getAllUsers = () => {
 	let promise = new Promise((resolve, reject) => {
 		// hàm xử lý khí connect server sau đó select user trên database
 		let query = conn.query(
-			//SHOW tất caqr bảng users
+			//SHOW tất cả bảng users
 			"SELECT * FROM users",
 			(err, users) => {
 				if (err) {
