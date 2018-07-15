@@ -1,8 +1,11 @@
 import express from "express"
+import axios from "axios"
 const router = express.Router()
 
 //import post để kết nối tới database
 import postMd from "../models/post"
+
+const api = "http://5b4ac9d830ebac001419f241.mockapi.io/api/v1/"
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /blog
 // Lấy các bài post trên database và render ra 1 list ở trang chủ
@@ -33,7 +36,4 @@ router.get("/post/:id", (req, res) => {
 	})
 })
 
-router.get("/about", (req, res) => {
-	res.render("blog/aboutDetail")
-})
 module.exports = router

@@ -10,7 +10,7 @@ router.use("/todo", require(__dirname + "/todo"))
 
 // Tạo 1 router chung cho cả hệ thống
 router.get("/", (req, res) => {
-	res.render("test")
+	res.redirect("blog")
 })
 
 router.get("/chat", (req, res) => {

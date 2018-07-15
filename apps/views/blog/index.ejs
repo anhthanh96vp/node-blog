@@ -3,6 +3,8 @@
 
 <head>
 
+  <style>
+  </style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -16,30 +18,28 @@
 
 <body id="page-top">
 
+
   <%-include layout/nav%>
 
     <%-include layout/header%>
 
+      <%-include block/about%>
 
-      <%-include layout/services%>
+        <%- include block/progress%>
 
-        <%-include posts/posts%>
+          <%-include block/skills%>
 
-          <%-include layout/portfolio%>
+            <%-include block/project%>
 
-            <%- include layout/about%>
+              <%-include posts/posts%>
 
-              <%-include layout/team%>
+                <%- include block/address%>
 
-                <%-include layout/company%>
+                  <%-include layout/footer%>
 
-                  <%-include layout/contact%>
+                    <%-include block/modal%>
 
-                    <%-include layout/footer%>
-
-                      <%-include layout/modal%>
-
-                        <%-include layout/bottom%>
+                      <%-include layout/bottom%>
 
 </body>
 
