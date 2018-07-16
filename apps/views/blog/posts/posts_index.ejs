@@ -1,0 +1,71 @@
+<section id="posts">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase">posts</h2>
+        <h3 class="section-subheading text-muted">Chào mừng các bạn đã ghé thăm blog của tôi</h3>
+      </div>
+    </div>
+    <div class="row">
+      <% if(data && data[2]){%>
+        <% data[2].forEach(post=>{%>
+          <div class="col-xs-12 col-md-6">
+            <div class="posts">
+              <div class="posts__avatar">
+                <a href="">
+                  <img src="/static/imgs/avatar.jpg" alt="">
+                </a>
+              </div>
+              <div class="posts__detail">
+                <div class="posts__detail__title">
+                  <div>
+                    <h3>
+                      <a href="/blog/post/<%= post.id %>">
+                        <%= post.title%>
+                      </a>
+                    </h3>
+                  </div>
+                  <div>
+                    <ul>
+                      <li>
+                        <a href="">
+                          <i class="fa fa-eye"></i>
+                        </a>
+                        <p>
+                          <%= post.view_post%>
+                        </p>
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa fa-thumbs-up"></i>
+                        </a>
+                        <p>
+                          <%= post.like_post%>
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="posts__detail__content">
+                  <p>
+                    <%- post.content%>
+                  </p>
+                  </p>
+                </div>
+                <div class="posts__detail__time">
+                  <p>
+                    <%= post.author%>
+                  </p> viết
+                  <%= post.created_at%>
+                    </p>
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%})%>
+            <%}%>
+
+    </div>
+  </div>
+</section>

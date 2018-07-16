@@ -1,8 +1,7 @@
-let getAllSkills = []
 const Skill = () => {
 	const url = `${location.protocol}//${document.domain}:${location.port}`
 	$.ajax({
-		url: url + "/blog/getAllSkills",
+		url: url + "/blog/skills",
 		type: "GET",
 		dataType: "json",
 		success: result => {
@@ -20,30 +19,6 @@ const Skill = () => {
 			return error
 		}
 	})
-
-	// $.ajax({
-	// 	url: url + "/blog/postSkills",
-	// 	type: "POST",
-	// 	dataType: "json",
-	// 	success: result => {
-	// 		return result
-	// 	},
-	// 	error: error => {
-	// 		return error
-	// 	}
-	// })
-
-	// $.ajax({
-	// 	url: url + "/blog/editSkills",
-	// 	type: "PUT",
-	// 	dataType: "json",
-	// 	success: result => {
-	// 		return result
-	// 	},
-	// 	error: error => {
-	// 		return error
-	// 	}
-	// })
 }
 
 $(document).ready(() => {

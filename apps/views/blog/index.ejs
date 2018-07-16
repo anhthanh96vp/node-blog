@@ -18,7 +18,6 @@
 
 <body id="page-top">
 
-
   <%-include layout/nav%>
 
     <%-include layout/header%>
@@ -27,21 +26,18 @@
 
         <%- include block/progress%>
 
-          <%-include block/skills%>
+          <%-include skills/skill_index%>
 
-            <%-include block/project%>
+            <%-include projects/project_index%>
 
-              <%-include posts/posts%>
+              <%-include posts/posts_index%>
 
                 <%- include block/address%>
 
                   <%-include layout/footer%>
 
-                    <%-include block/modal%>
+                    <%-include layout/bottom%>
 
-                      <%-include layout/bottom%>
-
-                      <script src="/static/js/skill.js"></script>
 </body>
 
 </html>

@@ -2,10 +2,10 @@ import express from "express"
 const router = express.Router()
 
 // import users để kết nối đến database
-import userMd from "../models/user"
+import userMd from "../models/user_md"
 
 //import post để kết nối tới database
-import postMd from "../models/post"
+import postMd from "../models/post_md"
 
 // import helper để đẩy password đã được mã hóa
 import helper from "../helpers/helper"

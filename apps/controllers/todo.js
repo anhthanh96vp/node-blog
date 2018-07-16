@@ -2,7 +2,7 @@ import express from "express"
 
 const router = express.Router()
 
-import todoMd from "../models/todo"
+import todoMd from "../models/todo_md"
 
 router.get("/", (req, res) => {
 	let data = todoMd.getAlljob()

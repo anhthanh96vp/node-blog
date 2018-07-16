@@ -1,5 +1,11 @@
-.btn-primary:hover,
-.btn-primary:focus {
+/* FontAwesome for working BootSnippet :> */
+
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+#team {
+    background: #eee !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
     background-color: #108d6f;
     border-color: #108d6f;
     box-shadow: none;
@@ -12,6 +18,9 @@
     border-color: #007b5e;
 }
 
+section {
+    padding: 60px 0;
+}
 
 section .section-title {
     text-align: center;
@@ -20,8 +29,12 @@ section .section-title {
     text-transform: uppercase;
 }
 
-.image-flip:hover .backside,
-.image-flip.hover .backside {
+#team .card {
+    border: none;
+    background: #ffffff;
+}
+
+.image-flip:hover .backside, .image-flip.hover .backside {
     -webkit-transform: rotateY(0deg);
     -moz-transform: rotateY(0deg);
     -o-transform: rotateY(0deg);
@@ -30,8 +43,7 @@ section .section-title {
     border-radius: .25rem;
 }
 
-.image-flip:hover .frontside,
-.image-flip.hover .frontside {
+.image-flip:hover .frontside, .image-flip.hover .frontside {
     -webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
     -o-transform: rotateY(180deg);
@@ -74,8 +86,7 @@ section .section-title {
     box-shadow: 5px 7px 9px -4px rgb(158, 158, 158);
 }
 
-.frontside,
-.backside {
+.frontside, .backside {
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -ms-backface-visibility: hidden;
@@ -92,17 +103,21 @@ section .section-title {
     transform-style: preserve-3d;
 }
 
-.frontside .card,
-.backside .card {
-    min-height: 200px;
+.frontside .card, .backside .card {
+    min-height: 312px;
 }
 
-.frontside .card .card-title,
-.backside .card .card-title {
-    color: #007b5e ;
+.backside .card a {
+    font-size: 18px;
+    color: white;
+}
+
+.frontside .card .card-title, .backside .card .card-title {
+    color: #007b5e !important;
 }
 
 .frontside .card .card-body img {
-    padding: 2rem;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
 }

@@ -4,14 +4,15 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-6">
-                        <h3>Add new post</h3>
+                        <h3>Add new skill</h3>
                     </div>
                     <div>
-                        <% if(data && data.error){%>
-                            <div>
-                                <%= data.error%>
+                        <%if(data && data.err){%>
+                            <div id="login-alert" class="alert alert-danger col-sm-12">
+                                <%= data.err%>
                             </div>
                             <%}%>
+
                     </div>
                 </div>
                 <hr>
@@ -24,15 +25,12 @@
                                 <input type="text" name="title" tabindex="1" class="form-control" placeholder="Title">
                             </div>
                             <div class="form-group">
-                                <textarea style="resize: none;" type="text" name="content" tabindex="1" class="form-control" placeholder="Content"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="author" tabindex="1" class="form-control" placeholder="Author">
+                                <input type="text" name="html_icon" tabindex="1" class="form-control" placeholder="Class icon">
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <input type="submit" tabindex="4" class="form-control btn btn-success" value="add new post">
+                                        <input type="submit" tabindex="4" class="form-control btn btn-success" value="add new skill">
                                     </div>
                                 </div>
                             </div>
