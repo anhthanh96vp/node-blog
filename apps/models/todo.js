@@ -1,5 +1,4 @@
 import db from "../common/database"
-import { resolve } from "dns"
 const conn = db.getConnection()
 
 //get todo list

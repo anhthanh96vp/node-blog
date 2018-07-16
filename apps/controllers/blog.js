@@ -4,21 +4,33 @@ const router = express.Router()
 
 //import post để kết nối tới database
 import postMd from "../models/post"
+import skillMd from "../models/skill"
 
 const api = "http://5b4ac9d830ebac001419f241.mockapi.io/api/v1/"
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /blog
 // Lấy các bài post trên database và render ra 1 list ở trang chủ
 router.get("/", (req, res) => {
-	let data = postMd.getAllPosts()
+	let dota = postMd.getAllPosts()
 
-	data.then(posts => {
+	dota.then(posts => {
 		let data = { posts: posts, err: false }
 		res.render("blog/index", { data: data })
 	}).catch(err => {
 		let data = { err: "Không tìm thấy dữ liệu bài post" }
 		res.render("blog/index", { data: data })
 	})
+
+	// let daoto = skillMd.getAllSkills()
+	// daoto
+	// 	.then(skills => {
+	// 		let data = { skills: skills, err: false }
+	// 		res.json("blog/index", { data: data })
+	// 	})
+	// 	.catch(err => {
+	// 		let data = { err: "Không tìm thấy dữ liệu bài post" }
+	// 		res.json("blog/index", { data: data })
+	// 	})
 })
 
 // Render ra 1 trang web chi tiết dựa vào id
@@ -34,6 +46,20 @@ router.get("/post/:id", (req, res) => {
 		let data = { err: "Không tìm thấy bài viết" }
 		res.render("blog/post", { data: data })
 	})
+})
+
+//trả về dữ liệu json kiểu của client
+router.get("/test2", (req, res) => {
+	let daoto = skillMd.getAllSkills()
+	daoto
+		.then(skills => {
+			let data = { skills: skills, err: false }
+			res.json({ data: data })
+		})
+		.catch(err => {
+			let data = { err: "Không tìm thấy dữ liệu skills" }
+			res.json({ data: data })
+		})
 })
 
 module.exports = router
