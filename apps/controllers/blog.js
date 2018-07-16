@@ -11,36 +11,22 @@ const api = "http://5b4ac9d830ebac001419f241.mockapi.io/api/v1/"
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /blog
 // Lấy các bài post trên database và render ra 1 list ở trang chủ
 router.get("/", (req, res) => {
-	let dota = postMd.getAllPosts()
-
-	dota.then(posts => {
+	let data = postMd.getAllPosts()
+	data.then(posts => {
 		let data = { posts: posts, err: false }
 		res.render("blog/index", { data: data })
 	}).catch(err => {
 		let data = { err: "Không tìm thấy dữ liệu bài post" }
 		res.render("blog/index", { data: data })
 	})
-
-	// let daoto = skillMd.getAllSkills()
-	// daoto
-	// 	.then(skills => {
-	// 		let data = { skills: skills, err: false }
-	// 		res.json("blog/index", { data: data })
-	// 	})
-	// 	.catch(err => {
-	// 		let data = { err: "Không tìm thấy dữ liệu bài post" }
-	// 		res.json("blog/index", { data: data })
-	// 	})
 })
 
 // Render ra 1 trang web chi tiết dựa vào id
 router.get("/post/:id", (req, res) => {
 	let data = postMd.getPostById(req.params.id)
-
 	data.then(posts => {
 		let post = posts[0]
 		let data = { post: post, err: false }
-
 		res.render("blog/post", { data: data })
 	}).catch(err => {
 		let data = { err: "Không tìm thấy bài viết" }
@@ -48,18 +34,70 @@ router.get("/post/:id", (req, res) => {
 	})
 })
 
+//Doi lai cach viet moi
 //trả về dữ liệu json kiểu của client
-router.get("/test2", (req, res) => {
-	let daoto = skillMd.getAllSkills()
-	daoto
-		.then(skills => {
-			let data = { skills: skills, err: false }
-			res.json({ data: data })
+router.get("/getAllSkills", (req, res) => {
+	let data = skillMd.getAllSkills()
+	data.then(skills => {
+		res.json({
+			result: true,
+			data: skills,
+			message: "Successfull"
 		})
-		.catch(err => {
-			let data = { err: "Không tìm thấy dữ liệu skills" }
-			res.json({ data: data })
+	}).catch(err => {
+		res.json({
+			result: false,
+			data: {},
+			message: `Err = ${err}`
 		})
+	})
+})
+
+//post skills
+router.post("/postSkills", (req, res) => {
+	let params = req.body
+
+	//check lỗi
+	if (params.title.trim() == 0 || params.html_icon.trim() == 0) {
+		res.json({ err: "Bạn phải nhập đầy đủ các trường" })
+	} else {
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = skillMd.addSkill(params)
+
+		data.then(skill => {
+			res.json({
+				result: true,
+				data: skill,
+				message: "Successfull"
+			})
+		}).catch(err => {
+			res.json({
+				result: false,
+				data: {},
+				message: `Err = ${err}`
+			})
+		})
+	}
+})
+
+//edit skilks
+
+router.put("/updateSkill", (req, res) => {
+	let params = req.body
+	let data = postMd.updatePost(params)
+
+	if (data) {
+		data.then(result => {
+			res.json({ status_code: 200, data })
+		}).catch(err => {
+			res.json({ status_code: 500 })
+		})
+	} else {
+		res.json({ status_code: 500 })
+	}
 })
 
 module.exports = router
