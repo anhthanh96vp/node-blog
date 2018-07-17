@@ -4,17 +4,15 @@ const conn = db.getConnection()
 const getAllProjects = () => {
 	// hàm xử lý khí connect server sau đó select posts tới database
 	// dữ liệu đổ về biến posts
+	// ORDER BY updated_at DESC LIMIT 9
 	let promise = new Promise((resolve, reject) => {
-		let query = conn.query(
-			"SELECT * FROM projects ORDER BY updated_at DESC LIMIT 9",
-			(err, posts) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(posts)
-				}
+		let query = conn.query("SELECT * FROM projects ", (err, posts) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(posts)
 			}
-		)
+		})
 	})
 	return promise
 }

@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Edit Skill</title>
     <%- include ../layout/head%>
-
 </head>
 
 <body>
@@ -15,7 +14,8 @@
         <div>
             <%- include ../layout/nav%>
         </div>
-        <div>
+
+        <div class="content-wrapper">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="panel panel-login">
@@ -67,8 +67,9 @@
             </div>
         </div>
     </div>
-
-    <script src="/static/js/skill.js"></script>
+    <%- include ../layout/footer%>
+        <%- include ../layout/bottom%>
+            <script src="/static/js/skill.js"></script>
 </body>
 
 </html>

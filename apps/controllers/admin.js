@@ -133,7 +133,6 @@ router.post("/signup", (req, res) => {
 })
 
 //----------------------------------------------
-
 // PHẦN SIGN IN
 router.get("/signin", (req, res) => {
 	res.render("admin/users/signin", { data: {} })
@@ -242,33 +241,101 @@ router.post("/signin", (req, res) => {
 router.get("/", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 
-	if (req.session.user) {
-		postMd
-			.getAllPosts()
-			//Promise vào resolve trả data posts
-			.then(posts => {
-				let data = {
-					posts: posts,
-					err: false
-				}
-				res.render("admin/dashboard", {
-					data: data
-				})
+	let users = userMd.getAllUsers()
+	let posts = postMd.getAllPosts()
+	let skills = skillMd.getAllSkills()
+	let projects = projectMd.getAllProjects()
+
+	Promise.all([users, skills, projects, posts])
+		.then(data => {
+			res.render("admin/dashboard", {
+				result: true,
+				data: data,
+				message: "Successfull"
 			})
-			//Xử lý lỗi nếu promise vào reject
-			.catch(err => {
-				res.render("admin/dashboard", {
-					data: {
-						err: "Lấy dữ liệu bài đăng lỗi"
-					}
-				})
+		})
+		.catch(reason => {
+			res.render("admin/dashboard", {
+				result: false,
+				data: {},
+				message: `Err = ${reason}`
 			})
-	} else {
-		res.redirect("/admin/signin")
-	}
+		})
+
+	//GET POST
+	// postMd
+	// 	.getAllPosts()
+	// 	//Promise vào resolve trả data posts
+	// 	.then(posts => {
+	// 		let data = {
+	// 			posts: posts,
+	// 			err: false
+	// 		}
+	// 		res.render("admin/dashboard", {
+	// 			data: data
+	// 		})
+	// 	})
+	// 	//Xử lý lỗi nếu promise vào reject
+	// 	.catch(err => {
+	// 		res.render("admin/dashboard", {
+	// 			data: {
+	// 				err: "Lấy dữ liệu bài đăng lỗi"
+	// 			}
+	// 		})
+	// 	})
 })
 
 //------------------------------------------------
+
+// RENDER TRANG CHI TIẾT
+
+router.get("/users", async (req, res) => {
+	try {
+		let users = await userMd.getAllUsers()
+		let data = { users: users, err: false }
+		res.render("admin/users/detailUsers", { data: data })
+	} catch (err) {
+		res.render("admin/users/detailUsers", {
+			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+		})
+	}
+})
+router.get("/skills", async (req, res) => {
+	try {
+		let skills = await skillMd.getAllSkills()
+		let data = { skills: skills, err: false }
+		res.render("admin/skills/detailSkills", { data: data })
+	} catch (err) {
+		res.render("admin/skills/detailSkills", {
+			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+		})
+	}
+})
+router.get("/projects", async (req, res) => {
+	try {
+		let projects = await projectMd.getAllProjects()
+		let data = { projects: projects, err: false }
+		res.render("admin/projects/detailProjects", { data: data })
+	} catch (err) {
+		res.render("admin/projects/detailProjects", {
+			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+		})
+	}
+})
+router.get("/posts", async (req, res) => {
+	try {
+		let posts = await postMd.getAllPosts()
+		let data = { posts: posts, err: false }
+		res.render("admin/posts/detailPosts", { data: data })
+	} catch (err) {
+		res.render("admin/posts/detailPosts", {
+			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+		})
+	}
+})
+
+//--------------------------------------------
+
 
 // PHẦN ADD NEW POST
 
@@ -400,18 +467,6 @@ router.delete("/posts/delete", (req, res) => {
 
 //------------------------------------------------------
 
-// CHUYỂN HƯỚNG TRANG admin/post --> admin
-
-router.get("/posts", (req, res) => {
-	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-
-	if (req.session.user) {
-		res.redirect("/admin")
-	} else {
-		res.redirect("/admin/signin")
-	}
-})
-
 // DANH SÁCH USER
 router.get("/users", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
@@ -512,6 +567,8 @@ router.put("/skills/edit/", async (req, res) => {
 		res.json({ status_code: 500 })
 	}
 })
+
+//delete skills
 
 router.delete("/skills/delete", async (req, res) => {
 	let skill_id = req.body.id

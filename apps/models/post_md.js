@@ -7,17 +7,15 @@ const conn = db.getConnection()
 const getAllPosts = () => {
 	// hàm xử lý khí connect server sau đó select posts tới database
 	// dữ liệu đổ về biến posts
+	// ORDER BY updated_at DESC LIMIT 6
 	let promise = new Promise((resolve, reject) => {
-		let query = conn.query(
-			"SELECT * FROM posts ORDER BY updated_at DESC LIMIT 6",
-			(err, posts) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(posts)
-				}
+		let query = conn.query("SELECT * FROM posts", (err, posts) => {
+			if (err) {
+				reject(err)
+			} else {
+				resolve(posts)
 			}
-		)
+		})
 	})
 	return promise
 }

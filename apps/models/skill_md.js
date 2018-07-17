@@ -2,9 +2,10 @@ import db from "../common/database"
 const conn = db.getConnection()
 
 const getAllSkills = () => {
+	// ORDER BY updated_at DESC LIMIT 50
 	let promise = new Promise((resolve, rejects) => {
 		let query = conn.query(
-			"SELECT * FROM skills ORDER BY updated_at DESC LIMIT 50",
+			"SELECT * FROM skills",
 			(err, skills) => {
 				if (err) {
 					reject(err)

@@ -1,0 +1,100 @@
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fa fa-arrow-circle-up fa-2x"></i>
+        <b>Table Posts</b>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info"
+                            style="width: 100%;">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending"
+                                        style="width: 134px;">ID</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending"
+                                        style="width: 209px;">Title</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending"
+                                        style="width: 93px;">Content</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending"
+                                        style="width: 39px;">Link Avatar</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending"
+                                        style="width: 91px;">Author</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                        style="width: 72px;">View Post</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                        style="width: 72px;">Like Post</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                        style="width: 72px;">Created Time</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                        style="width: 72px;">Updated Time</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                        style="width: 72px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th rowspan="1" colspan="1">Id</th>
+                                    <th rowspan="1" colspan="1">Title</th>
+                                    <th rowspan="1" colspan="1">Content</th>
+                                    <th rowspan="1" colspan="1">Link Avatar</th>
+                                    <th rowspan="1" colspan="1">Author</th>
+                                    <th rowspan="1" colspan="1">View Post</th>
+                                    <th rowspan="1" colspan="1">Like Post</th>
+                                    <th rowspan="1" colspan="1">Create Time</th>
+                                    <th rowspan="1" colspan="1">Update Time</th>
+                                    <th rowspan="1" colspan="1">Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <% if(data && data[3]){%>
+                                    <% data[3].forEach(post=> {%>
+                                        <tr role="row" class="odd">
+                                            <td>
+                                                <%= post.id%>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <%= post.title%>
+                                            </td>
+                                            <td>
+                                                <%= post.content%>
+                                            </td>
+                                            <td>
+                                                <%= post.avatar%>
+                                            </td>
+                                            <td>
+                                                <%= post.author%>
+                                            </td>
+                                            <td>
+                                                <%= post.view_post%>
+                                            </td>
+                                            <td>
+                                                <%= post.like_post%>
+                                            </td>
+                                            <td>
+                                                <%= post.created_at%>
+                                            </td>
+                                            <td>
+                                                <%= post.updated_at%>
+                                            </td>
+                                            <td style="display: flex; justify-content: space-between">
+                                                <a href="/admin/posts/edit/<%= post.id%>" class="btn btn-info">Edit</a>
+                                                <button post_id="<%= post.id%>" class="btn btn-danger post_delete">Delete</button>
+
+                                            </td>
+
+                                        </tr>
+                                        <%})%>
+                                            <%}%>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+</div>

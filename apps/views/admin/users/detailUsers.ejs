@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin</title>
+
+    <style>
+    </style>
+    <%- include ../layout/head%>
+
+
+</head>
+
+<body>
+    <%- include ../layout/nav%>
+        <div class="content-wrapper">
+            <div class="container-fuild" style="margin-top: 40px">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-users"></i>
+                        <b>Table Users</b>
+                    </div>
+                    <div class="text-right" style="padding-top:5px">
+                        <a href="/admin/users/new" class="btn btn-success">New User</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info"
+                                            style="width: 100%;">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending"
+                                                        style="width: 134px;">ID</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending"
+                                                        style="width: 209px;">Email</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending"
+                                                        style="width: 93px;">Password</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending"
+                                                        style="width: 39px;">User Name</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending"
+                                                        style="width: 91px;">Create Time</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                                        style="width: 72px;">Update Time</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending"
+                                                        style="width: 72px;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th rowspan="1" colspan="1">Id</th>
+                                                    <th rowspan="1" colspan="1">Email</th>
+                                                    <th rowspan="1" colspan="1">Password</th>
+                                                    <th rowspan="1" colspan="1">User Name</th>
+                                                    <th rowspan="1" colspan="1">Create Time</th>
+                                                    <th rowspan="1" colspan="1">Update Time</th>
+                                                    <th rowspan="1" colspan="1">Action</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                <% if(data && data.err) {%>
+                                                    <div id="login-alert" class="alert alert-danger col-sm-12">
+                                                        <%= data.err%>
+                                                    </div>
+                                                    <%}%>
+                                                        <% if(data && data.users){%>
+                                                            <% data.users.forEach(user=> {%>
+                                                                <tr role="row" class="odd">
+                                                                    <td>
+                                                                        <%= user.id%>
+                                                                    </td>
+                                                                    <td class="sorting_1">
+                                                                        <%= user.email%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.password%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.first_name%>
+                                                                            <%= user.last_name%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.created_at%>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.updated_at%>
+                                                                    </td>
+                                                                    <td style="display: flex; justify-content: space-between">
+                                                                        <a href="/admin/users/edit/<%= user.id%>" class="btn btn-info">Edit</a>
+                                                                        <button user_id="<%= user.id%>" class="btn btn-danger user_delete">Delete</button>
+
+                                                                    </td>
+                                                                </tr>
+                                                                <%})%>
+                                                                    <%}%>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+            </div>
+        </div>
+        <%- include ../layout/footer%>
+            <%- include ../layout/bottom%>
+
+                <script type="text/javascript" src="/static/js/post.js"></script>
+</body>
+
+</html>
