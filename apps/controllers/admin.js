@@ -6,6 +6,8 @@ import userMd from "../models/user_md"
 
 //import post để kết nối tới database
 import postMd from "../models/post_md"
+import skillMd from "../models/skill_md"
+import projectMd from "../models/project_md"
 
 // import helper để đẩy password đã được mã hóa
 import helper from "../helpers/helper"
@@ -18,7 +20,7 @@ import { validateEmail } from "../helpers/validation"
 //PHẦN SIGN UP
 
 router.get("/signup", (req, res) => {
-	res.render("admin/user/signup", { data: {} })
+	res.render("admin/users/signup", { data: {} })
 })
 
 //post dữ liệu từ form đăng ký lên và xử lý
@@ -28,7 +30,7 @@ router.post("/signup", (req, res) => {
 
 	//Xử lý khi submit nếu trường email không đúng định dạng thì err
 	if (!validateEmail(user.email)) {
-		res.render("admin/user/signup", {
+		res.render("admin/users/signup", {
 			data: {
 				err: "Hãy nhập đúng định dạng email"
 			}
@@ -40,7 +42,7 @@ router.post("/signup", (req, res) => {
 		user.password.length < 6 ||
 		(user.password != user.repassword && validateEmail(user.email))
 	) {
-		res.render("admin/user/signup", {
+		res.render("admin/users/signup", {
 			data: {
 				err: "Password nhập vào không chính xác hoặc dưới 6 ký tự"
 			}
@@ -107,11 +109,12 @@ router.post("/signup", (req, res) => {
 			//then là thành công, catch là bắt lỗi
 			result
 				.then(data => {
+					console.log("user :", user)
 					//Signup Thành công thì nhảy sang signin để có thể đăng nhập
 					res.redirect("/admin/signin")
 				})
 				.catch(err => {
-					res.render("admin/user/signup", {
+					res.render("admin/users/signup", {
 						data: {
 							err: "Gặp lỗi khi insert dữ liệu lên DB"
 						}
@@ -121,7 +124,7 @@ router.post("/signup", (req, res) => {
 
 		//NẾU bên hashPassword trả về reject thì catch sẽ chạy
 		.catch(err => {
-			res.render("admin/user/signup", {
+			res.render("admin/users/signup", {
 				data: {
 					err: "Mã hóa password thất bại"
 				}
@@ -133,7 +136,7 @@ router.post("/signup", (req, res) => {
 
 // PHẦN SIGN IN
 router.get("/signin", (req, res) => {
-	res.render("admin/user/signin", { data: {} })
+	res.render("admin/users/signin", { data: {} })
 })
 
 // TRUY VẤN EMAIL XÉT PASSWORD ĐỂ ĐĂNG NHẬP
@@ -144,7 +147,7 @@ router.post("/signin", (req, res) => {
 
 	//Check lỗi nếu không đúng định dạng email bằng file validate
 	if (!validateEmail(params.email)) {
-		res.render("admin/user/signin", {
+		res.render("admin/users/signin", {
 			data: { err: "Hãy nhập đúng định dạng email" }
 		})
 	} else {
@@ -206,7 +209,7 @@ router.post("/signin", (req, res) => {
 
 							res.redirect("/admin/")
 						} else {
-							res.render("admin/user/signin", {
+							res.render("admin/users/signin", {
 								data: {
 									err: "Password nhập vào không chính xác"
 								}
@@ -214,7 +217,7 @@ router.post("/signin", (req, res) => {
 						}
 					})
 					.catch(err => {
-						res.render("admin/user/signin", {
+						res.render("admin/users/signin", {
 							data: {
 								err: "Lỗi trong quá trình phân tích password"
 							}
@@ -222,7 +225,7 @@ router.post("/signin", (req, res) => {
 					})
 			})
 			.catch(err => {
-				res.render("admin/user/signin", {
+				res.render("admin/users/signin", {
 					data: {
 						err: "Email nhập vào không chính xác"
 					}
@@ -269,10 +272,10 @@ router.get("/", (req, res) => {
 
 // PHẦN ADD NEW POST
 
-router.get("/post/new", (req, res) => {
+router.get("/posts/new", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 	if (req.session.user) {
-		res.render("admin/post/new", {
+		res.render("admin/posts/new", {
 			data: {
 				err: false
 			}
@@ -283,7 +286,7 @@ router.get("/post/new", (req, res) => {
 })
 
 //Tương tự như bên post user
-router.post("/post/new", (req, res) => {
+router.post("/posts/new", (req, res) => {
 	let params = req.body
 
 	//check lỗi
@@ -292,7 +295,7 @@ router.post("/post/new", (req, res) => {
 		params.content.trim() == 0 ||
 		params.author.trim() == 0
 	) {
-		res.render("admin/post/new", {
+		res.render("admin/posts/new", {
 			data: { err: "Bạn phải nhập đầy đủ các trường" }
 		})
 	} else {
@@ -305,7 +308,7 @@ router.post("/post/new", (req, res) => {
 		data.then(result => {
 			res.redirect("/admin")
 		}).catch(err => {
-			res.render("admin/post/new", {
+			res.render("admin/posts/new", {
 				data: { err: "Không thể post bài đăng" }
 			})
 		})
@@ -316,7 +319,7 @@ router.post("/post/new", (req, res) => {
 
 // PHẦN EDIT POST
 
-router.get("/post/edit/:id", (req, res) => {
+router.get("/posts/edit/:id", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 
 	if (req.session.user) {
@@ -334,20 +337,20 @@ router.get("/post/edit/:id", (req, res) => {
 					err: false
 				}
 
-				res.render("admin/post/edit", {
+				res.render("admin/posts/edit", {
 					data: data
 				})
 			}).catch(err => {
 				let data = {
 					err: "Không có bài viết nào như vậy"
 				}
-				res.render("admin/post/edit", {
+				res.render("admin/posts/edit", {
 					data: data
 				})
 			})
 		} else {
 			let data = { err: "Không có bài viết nào như vậy" }
-			res.render("admin/post/edit", {
+			res.render("admin/posts/edit", {
 				data: data
 			})
 		}
@@ -360,7 +363,7 @@ router.get("/post/edit/:id", (req, res) => {
 
 //PHẦN UPDATE POST
 
-router.put("/post/edit/", (req, res) => {
+router.put("/posts/edit/", (req, res) => {
 	let params = req.body
 	let data = postMd.updatePost(params)
 
@@ -379,7 +382,7 @@ router.put("/post/edit/", (req, res) => {
 
 // PHẦN DELETE POST
 
-router.delete("/post/delete", (req, res) => {
+router.delete("/posts/delete", (req, res) => {
 	let post_id = req.body.id
 
 	let data = postMd.deletePost(post_id)
@@ -399,7 +402,7 @@ router.delete("/post/delete", (req, res) => {
 
 // CHUYỂN HƯỚNG TRANG admin/post --> admin
 
-router.get("/post", (req, res) => {
+router.get("/posts", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 
 	if (req.session.user) {
@@ -410,7 +413,7 @@ router.get("/post", (req, res) => {
 })
 
 // DANH SÁCH USER
-router.get("/user", (req, res) => {
+router.get("/users", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 	if (req.session.user) {
 		let data = userMd.getAllUsers()
@@ -421,15 +424,145 @@ router.get("/user", (req, res) => {
 				err: false
 			}
 
-			res.render("admin/user/user", { data: data })
+			res.render("admin/users/user", { data: data })
 		}).catch(err => {
 			let data = {
 				err: "Could not get user info"
 			}
-			res.render("admin/user/user", { data: data })
+			res.render("admin/users/user", { data: data })
 		})
 	} else {
 		res.redirect("/admin/signin")
 	}
 })
+
+//-------------------------------------------------
+
+// PHẦN SKILL
+
+router.get("/skills/new", (req, res) => {
+	res.render("admin/skills/new", { err: false })
+})
+
+//post skills
+router.post("/skills/new", (req, res) => {
+	let params = req.body
+
+	//check lỗi
+
+	if (params.title.trim() == 0 || params.html_icon.trim() == 0) {
+		res.render("admin/skills/new", {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = skillMd.addSkill(params)
+
+		data.then(skill => {
+			res.redirect("/blog")
+		}).catch(err => {
+			res.render("admin/skills/new", {
+				result: false,
+				data: {},
+				message: `Err = ${err}`
+			})
+		})
+	}
+})
+
+// edit skills
+const reponseObject = (error, data, message) => {
+	if (error) {
+		return {
+			data: {},
+			error: `Err = ${error}`,
+			message
+		}
+	} else {
+		return { data, error: null, message }
+	}
+}
+router.get("/skills/edit/:id", async (req, res) => {
+	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
+
+	let params = req.params
+	let id = params.id
+	try {
+		let skills = await skillMd.getSkillById(id)
+		let skill = skills[0]
+		res.render("admin/skills/edit", { skill: skill, err: false })
+	} catch (err) {
+		res.render("admin/skills/edit", {
+			err: "Không icons nào như vậy"
+		})
+	}
+})
+
+// update skills
+
+router.put("/skills/edit/", async (req, res) => {
+	let params = req.body
+	try {
+		let data = await skillMd.updateSkill(params)
+		res.json({ status_code: 200, data })
+	} catch (error) {
+		res.json({ status_code: 500 })
+	}
+})
+
+router.delete("/skills/delete", async (req, res) => {
+	let skill_id = req.body.id
+	try {
+		let data = skillMd.deleteSkill(skill_id)
+		res.json({ status_code: 200 })
+	} catch (error) {
+		res.json({ status_code: 404 })
+	}
+})
+//-------------------------------------------------
+// PHẦN PROJECT
+
+router.get("/projects/new", (req, res) => {
+	res.render("admin/projects/new", { err: false })
+})
+
+//post project
+router.post("/projects/new", (req, res) => {
+	let params = req.body
+
+	//check lỗi
+	if (
+		params.title.trim() == 0 ||
+		params.intro.trim() == 0 ||
+		params.description.trim() == 0 ||
+		params.link_project.trim() == 0
+	) {
+		res.render("admin/projects/new", {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		if (params.link_images.trim() == 0) {
+			params.link_images = "/static/imgs/user.png"
+		}
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = projectMd.addProject(params)
+
+		data.then(project => {
+			res.redirect("/blog")
+		}).catch(err => {
+			res.render("admin/projects/new", {
+				result: false,
+				data: {},
+				message: `Err = ${err}`
+			})
+		})
+	}
+})
+
 module.exports = router

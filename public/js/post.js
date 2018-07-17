@@ -16,7 +16,7 @@ function Post() {
 				document.domain +
 				":" +
 				location.port +
-				"/admin/post/edit"
+				"/admin/posts/edit"
 
 			$.ajax({
 				url: url,

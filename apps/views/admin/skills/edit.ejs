@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edit Skill</title>
+    <%- include ../layout/head%>
+
+</head>
+
+<body>
+    <div class="container-fuild">
+        <div>
+            <%- include ../layout/nav%>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-login">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h3>Edit icon skill</h3>
+                                </div>
+                                <div>
+                                    <div>
+                                        <div>
+                                            <%if(err){%>
+                                                <div id="login-alert" class="alert alert-danger col-sm-12">
+                                                    <%= err%>
+                                                </div>
+                                                <%}%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form action="" method="post" role="form">
+                                        <div>
+                                            <input type="hidden" name="id" tabindex="1" class="form-control id" placeholder="Id" value="<% if(skill && skill.id) {%> <%= skill.id%> <%} %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="title" tabindex="1" class="form-control title" placeholder="Tiêu đề" value="<% if(skill && skill.title) {%> <%= skill.title%> <%} %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea type="text" name="html_icon" tabindex="1" class="form-control html_icon" placeholder="Class icon"><% if(skill && skill.html_icon) {%> <%= skill.html_icon%> <%} %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <input type="submit" tabindex="4" class="form-control btn btn-success skill_edit" value="Edit icon skill">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/skill.js"></script>
+</body>
+
+</html>
