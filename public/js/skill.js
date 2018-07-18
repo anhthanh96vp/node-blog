@@ -26,7 +26,7 @@ function Skill() {
 					location.reload()
 				}
 			},
-			error: function(error) {
+			error: function(res, error) {
 				if (res && res.status_code == 500) {
 					alert(`error = ${JSON.stringify(error)}`)
 				}
@@ -36,24 +36,25 @@ function Skill() {
 
 	$(".skill_delete").click(function(e) {
 		//Lấy số id của post
-		let skill_id = $(this).attr("skill_id")
-
-		$.ajax({
-			url: url + "/admin/skills/delete",
-			type: "DELETE",
-			data: { id: skill_id },
-			dataType: "json",
-			success: res => {
-				if (res && res.status_code == 200) {
-					location.reload()
+		if (confirm("You may want to delete") == true) {
+			let skill_id = $(this).attr("skill_id")
+			$.ajax({
+				url: url + "/admin/skills/delete",
+				type: "DELETE",
+				data: { id: skill_id },
+				dataType: "json",
+				success: res => {
+					if (res && res.status_code == 200) {
+						location.reload()
+					}
+				},
+				error: (res, error) => {
+					if (res && res.status_code == 404) {
+						alert(`error = ${JSON.stringify(error)}`)
+					}
 				}
-			},
-			error: error => {
-				if (res && res.status_code == 404) {
-					alert(`error = ${JSON.stringify(error)}`)
-				}
-			}
-		})
+			})
+		}
 	})
 }
 

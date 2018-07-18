@@ -17,6 +17,24 @@ const getAllProjects = () => {
 	return promise
 }
 
+const getAllProjectsLimit = () => {
+	// hàm xử lý khí connect server sau đó select posts tới database
+	// dữ liệu đổ về biến posts
+	let promise = new Promise((resolve, reject) => {
+		let query = conn.query(
+			"SELECT * FROM projects ORDER BY updated_at DESC LIMIT 9",
+			(err, posts) => {
+				if (err) {
+					reject(err)
+				} else {
+					resolve(posts)
+				}
+			}
+		)
+	})
+	return promise
+}
+
 const addProject = params => {
 	if (params) {
 		let promise = new Promise((resolve, reject) => {
@@ -100,6 +118,7 @@ const deleteProject = id => {
 }
 module.exports = {
 	getAllProjects,
+	getAllProjectsLimit,
 	addProject,
 	getProjectById,
 	updateProject,

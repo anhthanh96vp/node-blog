@@ -1,9 +1,9 @@
 function Project() {
 	//Đường link localhost
 	const url = `${location.protocol}//${document.domain}:${location.port}`
-	$(".project_edit").click(e => {
+	$(".project_edit").click(function(e) {
 		let params = {
-			id: $(".id")
+			id: $("input[name=id]")
 				.val()
 				.trim(),
 			title: $("input[name=title]")
@@ -40,26 +40,29 @@ function Project() {
 		})
 	})
 
-	$(".project_delete").click(e => {
+	$(".project_delete").click(function(e) {
 		//Lấy số id của post
-		let project_id = $(this).attr("project_id")
+		if (confirm("You may want to delete") == true) {
+			let project_id = $(this).attr("project_id")
+			console.log("project_id :", project_id)
 
-		$.ajax({
-			url: url + "/admin/projects/delete",
-			type: "DELETE",
-			data: { id: skill_id },
-			dataType: "json",
-			success: res => {
-				if (res && res.status_code == 200) {
-					location.reload()
+			$.ajax({
+				url: url + "/admin/projects/delete",
+				type: "DELETE",
+				data: { id: project_id },
+				dataType: "json",
+				success: res => {
+					if (res && res.status_code == 200) {
+						location.reload()
+					}
+				},
+				error: (res, error) => {
+					if (res && res.status_code == 404) {
+						alert(`error = ${JSON.stringify(error)}`)
+					}
 				}
-			},
-			error: error => {
-				if (res && res.status_code == 404) {
-					alert(`error = ${JSON.stringify(error)}`)
-				}
-			}
-		})
+			})
+		}
 	})
 }
 

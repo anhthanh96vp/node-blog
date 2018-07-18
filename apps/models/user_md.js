@@ -92,4 +92,57 @@ const getUserById = id => {
 	return false
 }
 
-module.exports = { addUser, getUserByEmail, getAllUsers, getUserById }
+const updateUser = params => {
+	if (params) {
+		let promise = new Promise((resolve, reject) => {
+			let query = conn.query(
+				"UPDATE users SET password = ?, first_name = ?, last_name = ?, updated_at = ? WHERE id = ?",
+				[
+					params.password,
+					params.first_name,
+					params.last_name,
+					new Date(),
+					params.id
+				],
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						console.log("params :", params)
+						resolve(result)
+					}
+				}
+			)
+		})
+		return promise
+	}
+	return false
+}
+
+const deleteUser = id => {
+	if (id) {
+		let promise = new Promise((resolve, reject) => {
+			let query = conn.query(
+				"DELETE FROM users WHERE id = ?",
+				id,
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						resolve(result)
+					}
+				}
+			)
+		})
+		return promise
+	}
+	return false
+}
+module.exports = {
+	addUser,
+	getUserByEmail,
+	getAllUsers,
+	getUserById,
+	updateUser,
+	deleteUser
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <style>
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>
+        <%if(data && data.post){%>
+            <%= data.post.title%>
+                <%}%>
+    </title>
+
+    <%-include ../layout/head%>
+
+</head>
+
+<body id="page-top">
+
+    <%-include ../layout/nav%>
+
+        <%-include ../layout/header%>
+
+
+            <div class="container" style="padding-top: 100px; color: #2c4762">
+                <div class="col-md-12">
+                    <hr>
+                    <h1 class="text-center">
+                        <%if(data && data.post){%>
+                            <%= data.post.title%>
+                                <%}%>
+                    </h1>
+                    <div class="text-right">
+                        <a href="">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        <span>
+                            <%= data.post.view_post%>
+                        </span>
+
+
+                        <a href="">
+                            <i class="fa fa-thumbs-up"></i>
+                        </a>
+                        <span>
+                            <%= data.post.like_post%>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="badge">Tác giả :
+                            <%if(data && data.post){%>
+                                <%= data.post.author%>
+                                    <%}%>
+                        </span>
+                        <span class="badge">Cập nhật ngày
+                            <%if(data && data.post){%>
+                                <%= data.post.updated_at%>
+                                    <%}%>
+                        </span>
+
+                    </div>
+
+                    <div>
+                        <p>
+                            <%if(data && data.post){%>
+                                <%- data.post.content%>
+                                    <%}%>
+                        </p>
+                    </div>
+                    <div>
+                        <span class="badge">Tác giả :
+                            <%if(data && data.post){%>
+                                <%= data.post.author%>
+                                    <%}%>
+                        </span>
+
+                        <span class="badge">Cập nhật ngày
+                            <%if(data && data.post){%>
+                                <%= data.post.updated_at%>
+                                    <%}%>
+                        </span>
+
+                    </div>
+
+                    <hr>
+
+                </div>
+            </div>
+
+            <%- include ../block/address%>
+
+                <%-include ../layout/footer%>
+
+                    <%-include ../layout/bottom%>
+
+</body>
+
+</html>

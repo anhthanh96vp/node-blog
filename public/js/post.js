@@ -37,7 +37,7 @@ function Post() {
 						location.reload()
 					}
 				},
-				error: function(res) {
+				error: function(res, error) {
 					if (res && res.status_code == 500) {
 						alert(`error = ${JSON.stringify(error)}`)
 					}
@@ -47,28 +47,35 @@ function Post() {
 
 		$(".post_delete").click(function(e) {
 			//Lấy số id của post
-			let post_id = $(this).attr("post_id")
 
-			//Đường link localhost
-			let baseUrl =
-				location.protocol + "//" + document.domain + ":" + location.port
+			if (confirm("You may want to delete")) {
+				let post_id = $(this).attr("post_id")
 
-			$.ajax({
-				url: baseUrl + "/admin/posts/delete",
-				type: "DELETE",
-				data: { id: post_id },
-				dataType: "json",
-				success: function(res) {
-					if (res && res.status_code == 200) {
-						location.reload()
+				//Đường link localhost
+				let baseUrl =
+					location.protocol +
+					"//" +
+					document.domain +
+					":" +
+					location.port
+
+				$.ajax({
+					url: baseUrl + "/admin/posts/delete",
+					type: "DELETE",
+					data: { id: post_id },
+					dataType: "json",
+					success: function(res) {
+						if (res && res.status_code == 200) {
+							location.reload()
+						}
+					},
+					error: function(res, error) {
+						if (res && res.status_code == 404) {
+							alert(`error = ${JSON.stringify(error)}`)
+						}
 					}
-				},
-				error: function(error) {
-					if (res && res.status_code == 404) {
-						alert(`error = ${JSON.stringify(error)}`)
-					}
-				}
-			})
+				})
+			}
 		})
 	}
 	bindEvent()

@@ -20,6 +20,24 @@ const getAllPosts = () => {
 	return promise
 }
 
+const getAllPostsLimit = () => {
+	// hàm xử lý khí connect server sau đó select posts tới database
+	// dữ liệu đổ về biến posts
+	let promise = new Promise((resolve, reject) => {
+		let query = conn.query(
+			"SELECT * FROM posts ORDER BY updated_at DESC LIMIT 6",
+			(err, posts) => {
+				if (err) {
+					reject(err)
+				} else {
+					resolve(posts)
+				}
+			}
+		)
+	})
+	return promise
+}
+
 //hàm add thêm bài post
 //Tương tự như bên post user
 const addPost = params => {
@@ -110,6 +128,7 @@ const deletePost = id => {
 }
 module.exports = {
 	getAllPosts,
+	getAllPostsLimit,
 	addPost,
 	getPostById,
 	updatePost,

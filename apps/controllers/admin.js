@@ -1,10 +1,8 @@
 import express from "express"
 const router = express.Router()
 
-// import users để kết nối đến database
-import userMd from "../models/user_md"
-
 //import post để kết nối tới database
+import userMd from "../models/user_md"
 import postMd from "../models/post_md"
 import skillMd from "../models/skill_md"
 import projectMd from "../models/project_md"
@@ -29,7 +27,7 @@ router.post("/signup", (req, res) => {
 	let user = req.body
 
 	//Xử lý khi submit nếu trường email không đúng định dạng thì err
-	if (!validateEmail(user.email)) {
+	if (!validateEmail(user.email.trim())) {
 		res.render("admin/users/signup", {
 			data: {
 				err: "Hãy nhập đúng định dạng email"
@@ -39,7 +37,7 @@ router.post("/signup", (req, res) => {
 
 	//Xử lý khi submit nếu nhập lại password không giống nhau thì err
 	if (
-		user.password.length < 6 ||
+		user.password.trim().length < 6 ||
 		(user.password != user.repassword && validateEmail(user.email))
 	) {
 		res.render("admin/users/signup", {
@@ -144,7 +142,7 @@ router.post("/signin", (req, res) => {
 	let params = req.body
 
 	//Check lỗi nếu không đúng định dạng email bằng file validate
-	if (!validateEmail(params.email)) {
+	if (!validateEmail(params.email.trim())) {
 		res.render("admin/users/signin", {
 			data: { err: "Hãy nhập đúng định dạng email" }
 		})
@@ -235,7 +233,7 @@ router.post("/signin", (req, res) => {
 
 //----------------------------------------------
 
-// PHẦN POST ALL PAGE ADMIN
+// PHẦN RENDER DỮ LIỆU TRANG ADMIN
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /admin
 router.get("/", (req, res) => {
@@ -336,36 +334,44 @@ router.get("/users/edit/:id", async (req, res) => {
 router.put("/users/edit/", async (req, res) => {
 	let params = req.body
 	let id = params.id
+
 	if (
 		params.password.trim().length < 6 ||
-		params.first_name.trim() == 0 ||
-		params.last_name.trim() == 0
+		params.first_name.trim() == "" ||
+		params.last_name.trim() == ""
 	) {
-		res.render("admin/users/edit/:" + id, {
+		res.render(`admin/users/edit`, {
+			user: {},
 			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else if (params.password != params.repassword) {
+		res.render("admin/users/edit", {
+			user: {},
+			err: "Nhập lại password không chính xác"
 		})
 	} else {
 		try {
 			let data = await userMd.updateUser(params)
 			res.json({ status_code: 200 })
 		} catch (error) {
-			// console.log(error);
-			res.json({ status_code: 500 })
+			res.json(
+				{ status_code: 500 },
+				{ err: "Bạn phải nhập đầy đủ các trường" }
+			)
 		}
 	}
 })
+//delete user
 
-// //delete project
-
-// router.delete("/projects/delete", async (req, res) => {
-// 	let skill_id = req.body.id
-// 	try {
-// 		let data = projectMd.deleteProject(skill_id)
-// 		res.json({ status_code: 200 })
-// 	} catch (error) {
-// 		res.json({ status_code: 404 })
-// 	}
-// })
+router.delete("/users/delete", async (req, res) => {
+	let user_id = req.body.id
+	try {
+		let data = userMd.deleteUser(user_id)
+		res.json({ status_code: 200 })
+	} catch (error) {
+		res.json({ status_code: 404 })
+	}
+})
 
 //-------------------------------------------------
 
@@ -391,7 +397,7 @@ router.post("/skills/new", (req, res) => {
 		let data = skillMd.addSkill(params)
 
 		data.then(skill => {
-			res.redirect("/admin")
+			res.redirect("/admin/skills")
 		}).catch(err => {
 			res.render("admin/skills/new", {
 				result: false,
@@ -424,11 +430,18 @@ router.get("/skills/edit/:id", async (req, res) => {
 
 router.put("/skills/edit/", async (req, res) => {
 	let params = req.body
-	try {
-		let data = await skillMd.updateSkill(params)
-		res.json({ status_code: 200, data })
-	} catch (error) {
-		res.json({ status_code: 500 })
+	if (params.title.trim() == "" || params.html_icon.trim() == "") {
+		res.render("admin/skills/edit", {
+			skill: {},
+			err: "Hãy điền đẩy đủ thông tin"
+		})
+	} else {
+		try {
+			let data = await skillMd.updateSkill(params)
+			res.json({ status_code: 200, data })
+		} catch (error) {
+			res.json({ status_code: 500 })
+		}
 	}
 })
 
@@ -475,7 +488,7 @@ router.post("/projects/new", (req, res) => {
 		let data = projectMd.addProject(params)
 
 		data.then(project => {
-			res.redirect("/admin")
+			res.redirect("/admin/projects")
 		}).catch(err => {
 			res.render("admin/projects/new", {
 				result: false,
@@ -534,9 +547,10 @@ router.put("/projects/edit/", async (req, res) => {
 //delete project
 
 router.delete("/projects/delete", async (req, res) => {
-	let skill_id = req.body.id
+	let project_id = req.body.id
+
 	try {
-		let data = projectMd.deleteProject(skill_id)
+		let data = projectMd.deleteProject(project_id)
 		res.json({ status_code: 200 })
 	} catch (error) {
 		res.json({ status_code: 404 })
@@ -550,15 +564,12 @@ router.delete("/projects/delete", async (req, res) => {
 // add post
 router.get("/posts/new", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-	if (req.session.user) {
-		res.render("admin/posts/new", {
-			data: {
-				err: false
-			}
-		})
-	} else {
-		res.redirect("/admin/signin")
-	}
+
+	res.render("admin/posts/new", {
+		data: {
+			err: false
+		}
+	})
 })
 
 //Tương tự như bên post user
@@ -576,13 +587,15 @@ router.post("/posts/new", (req, res) => {
 		})
 	} else {
 		let date = new Date()
+
 		params.created_at = date
 		params.updated_at = date
 
+		params.avatar = "/static/imgs/user"
 		let data = postMd.addPost(params)
 
 		data.then(result => {
-			res.redirect("/admin")
+			res.redirect("/admin/posts")
 		}).catch(err => {
 			res.render("admin/posts/new", {
 				data: { err: "Không thể post bài đăng" }
