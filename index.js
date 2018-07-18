@@ -22,7 +22,7 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 		//cookie là false có thể cho mình save lữ diệu vào session
-		cookie: { secure: false }
+		cookie: { secure: true }
 	})
 )
 

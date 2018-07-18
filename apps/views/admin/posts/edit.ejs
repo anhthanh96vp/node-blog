@@ -9,8 +9,10 @@
 
         <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
         <script>tinymce.init({ selector: 'textarea' });</script>
-</head>
 
+                    <%- include ../layout/head%>
+
+</head>
 <body>
     <div class="container-fuild">
         <div>
@@ -72,10 +74,12 @@
         </div>
 
 
-
     </div>
-
+    <%- include ../layout/bottom%>
     <script type="text/javascript" src="/static/js/post.js"></script>
+     <%- include ../layout/footer%>
+      
+
 
 </body>
 

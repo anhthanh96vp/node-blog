@@ -41,21 +41,20 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form action="" method="post" role="form">
+                                    <form action="" method="" role="form">
                                         <div>
-                                            <input type="hidden" name="id" tabindex="1" class="form-control id" placeholder="Id" value="<% if(skill && skill.id) {%> <%= skill.id%> <%} %>">
+                                            <input id="id" type="hidden" name="id" tabindex="1" class="form-control id" placeholder="Id" value="<% if(skill && skill.id) {%> <%= skill.id%> <%} %>">
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" name="title" tabindex="1" class="form-control title" placeholder="Tiêu đề" value="<% if(skill && skill.title) {%> <%= skill.title%> <%} %>">
+                                            <input id="title" type="text" name="title" tabindex="1" class="form-control title" placeholder="Tiêu đề" value="<% if(skill && skill.title) {%> <%= skill.title%> <%} %>">
                                         </div>
                                         <div class="form-group">
-                                            <textarea type="text" name="html_icon" tabindex="1" class="form-control html_icon" placeholder="Class icon"><% if(skill && skill.html_icon) {%> <%= skill.html_icon%> <%} %></textarea>
+                                            <textarea id="html_icon" type="text" name="html_icon" tabindex="1" class="form-control html_icon" placeholder="Class icon"><% if(skill && skill.html_icon) {%> <%= skill.html_icon%> <%} %></textarea>
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
-                                                    <input type="submit" tabindex="4" class="form-control btn btn-success skill_edit" value="Edit icon skill">
-                                                </div>
+                                                    <input type="button" tabindex="4" class="form-control btn btn-success skill_edit" value="Edit icon skill">
                                             </div>
                                         </div>
                                     </form>

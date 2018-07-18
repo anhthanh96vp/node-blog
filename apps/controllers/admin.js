@@ -92,15 +92,15 @@ router.post("/signup", (req, res) => {
 
 		//NẾU bên hashPassword trả về reresolve thì then sẽ chạy
 		.then(codePassword => {
+			let date = new Date()
 			user = {
 				email: user.email,
 				password: codePassword.trim(),
 				first_name: user.firstname,
 				last_name: user.lastname,
-				created_at: new Date(),
-				updated_at: new Date()
+				created_at: date,
+				updated_at: date
 			}
-
 			//Nếu user đẩy lên khác user nhập vào thì lỗi, thành công thì success
 			let result = userMd.addUser(user)
 
@@ -109,7 +109,6 @@ router.post("/signup", (req, res) => {
 			//then là thành công, catch là bắt lỗi
 			result
 				.then(data => {
-					console.log("user :", user)
 					//Signup Thành công thì nhảy sang signin để có thể đăng nhập
 					res.redirect("/admin/signin")
 				})
@@ -204,6 +203,7 @@ router.post("/signin", (req, res) => {
 						if (status) {
 							// đẩy thông tin user vào session
 							req.session.user = user
+
 							console.log(req.session.user)
 
 							res.redirect("/admin/")
@@ -261,33 +261,11 @@ router.get("/", (req, res) => {
 				message: `Err = ${reason}`
 			})
 		})
-
-	//GET POST
-	// postMd
-	// 	.getAllPosts()
-	// 	//Promise vào resolve trả data posts
-	// 	.then(posts => {
-	// 		let data = {
-	// 			posts: posts,
-	// 			err: false
-	// 		}
-	// 		res.render("admin/dashboard", {
-	// 			data: data
-	// 		})
-	// 	})
-	// 	//Xử lý lỗi nếu promise vào reject
-	// 	.catch(err => {
-	// 		res.render("admin/dashboard", {
-	// 			data: {
-	// 				err: "Lấy dữ liệu bài đăng lỗi"
-	// 			}
-	// 		})
-	// 	})
 })
 
 //------------------------------------------------
 
-// RENDER TRANG CHI TIẾT
+// RENDER TRANG CHI TIẾT ADM
 
 router.get("/users", async (req, res) => {
 	try {
@@ -334,11 +312,242 @@ router.get("/posts", async (req, res) => {
 	}
 })
 
+//0------------------------------------------------
+
+// PHẦN USER
+
+router.get("/users/edit/:id", async (req, res) => {
+	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
+	let params = req.params
+	let id = params.id
+	try {
+		let users = await userMd.getUserById(id)
+		let user = users[0]
+		res.render("admin/users/edit", { user: user, err: false })
+	} catch (err) {
+		res.render("admin/users/edit", {
+			err: "Không có user nào như vậy"
+		})
+	}
+})
+
+// update user
+
+router.put("/users/edit/", async (req, res) => {
+	let params = req.body
+	let id = params.id
+	if (
+		params.password.trim().length < 6 ||
+		params.first_name.trim() == 0 ||
+		params.last_name.trim() == 0
+	) {
+		res.render("admin/users/edit/:" + id, {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		try {
+			let data = await userMd.updateUser(params)
+			res.json({ status_code: 200 })
+		} catch (error) {
+			// console.log(error);
+			res.json({ status_code: 500 })
+		}
+	}
+})
+
+// //delete project
+
+// router.delete("/projects/delete", async (req, res) => {
+// 	let skill_id = req.body.id
+// 	try {
+// 		let data = projectMd.deleteProject(skill_id)
+// 		res.json({ status_code: 200 })
+// 	} catch (error) {
+// 		res.json({ status_code: 404 })
+// 	}
+// })
+
+//-------------------------------------------------
+
+// PHẦN SKILL
+
+router.get("/skills/new", (req, res) => {
+	res.render("admin/skills/new", { err: false })
+})
+
+//post skills
+router.post("/skills/new", (req, res) => {
+	let params = req.body
+	//check lỗi
+	if (params.title.trim() == 0 || params.html_icon.trim() == 0) {
+		res.render("admin/skills/new", {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = skillMd.addSkill(params)
+
+		data.then(skill => {
+			res.redirect("/admin")
+		}).catch(err => {
+			res.render("admin/skills/new", {
+				result: false,
+				data: {},
+				message: `Err = ${err}`
+			})
+		})
+	}
+})
+
+// edit skills
+
+router.get("/skills/edit/:id", async (req, res) => {
+	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
+
+	let params = req.params
+	let id = params.id
+	try {
+		let skills = await skillMd.getSkillById(id)
+		let skill = skills[0]
+		res.render("admin/skills/edit", { skill: skill, err: false })
+	} catch (err) {
+		res.render("admin/skills/edit", {
+			err: "Không có icons nào như vậy"
+		})
+	}
+})
+
+// update skills
+
+router.put("/skills/edit/", async (req, res) => {
+	let params = req.body
+	try {
+		let data = await skillMd.updateSkill(params)
+		res.json({ status_code: 200, data })
+	} catch (error) {
+		res.json({ status_code: 500 })
+	}
+})
+
+//delete skills
+
+router.delete("/skills/delete", async (req, res) => {
+	let skill_id = req.body.id
+	try {
+		let data = skillMd.deleteSkill(skill_id)
+		res.json({ status_code: 200 })
+	} catch (error) {
+		res.json({ status_code: 404 })
+	}
+})
+//-------------------------------------------------
+// PHẦN PROJECT
+
+router.get("/projects/new", (req, res) => {
+	res.render("admin/projects/new", { err: false })
+})
+
+//post project
+router.post("/projects/new", (req, res) => {
+	let params = req.body
+
+	//check lỗi
+	if (
+		params.title.trim() == 0 ||
+		params.intro.trim() == 0 ||
+		params.description.trim() == 0 ||
+		params.link_project.trim() == 0
+	) {
+		res.render("admin/projects/new", {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		if (params.link_images.trim() == 0) {
+			params.link_images = "/static/imgs/user.png"
+		}
+		let date = new Date()
+		params.created_at = date
+		params.updated_at = date
+
+		let data = projectMd.addProject(params)
+
+		data.then(project => {
+			res.redirect("/admin")
+		}).catch(err => {
+			res.render("admin/projects/new", {
+				result: false,
+				data: {},
+				message: `Err = ${err}`
+			})
+		})
+	}
+})
+
+router.get("/projects/edit/:id", async (req, res) => {
+	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
+
+	let params = req.params
+	let id = params.id
+
+	try {
+		let projects = await projectMd.getProjectById(id)
+		let project = projects[0]
+		res.render("admin/projects/edit", { project: project, err: false })
+	} catch (err) {
+		res.render("admin/projects/edit", {
+			err: "Không có project nào như vậy"
+		})
+	}
+})
+
+// update project
+
+router.put("/projects/edit/", async (req, res) => {
+	let params = req.body
+
+	if (
+		params.title.trim() == 0 ||
+		params.intro.trim() == 0 ||
+		params.description.trim() == 0 ||
+		params.link_project.trim() == 0
+	) {
+		res.render("admin/projects/edit/:" + id, {
+			err: "Bạn phải nhập đầy đủ các trường"
+		})
+	} else {
+		if (params.link_images.trim() == 0) {
+			params.link_images = "/static/imgs/user.png"
+		}
+		try {
+			let data = await projectMd.updateProject(params)
+			res.json({ status_code: 200 })
+		} catch (error) {
+			// console.log(error);
+			res.json({ status_code: 500 })
+		}
+	}
+})
+
+//delete project
+
+router.delete("/projects/delete", async (req, res) => {
+	let skill_id = req.body.id
+	try {
+		let data = projectMd.deleteProject(skill_id)
+		res.json({ status_code: 200 })
+	} catch (error) {
+		res.json({ status_code: 404 })
+	}
+})
+
 //--------------------------------------------
 
+// PHẦN POST
 
-// PHẦN ADD NEW POST
-
+// add post
 router.get("/posts/new", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 	if (req.session.user) {
@@ -384,7 +593,7 @@ router.post("/posts/new", (req, res) => {
 
 //------------------------------------------------------
 
-// PHẦN EDIT POST
+// edit post
 
 router.get("/posts/edit/:id", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
@@ -447,7 +656,7 @@ router.put("/posts/edit/", (req, res) => {
 
 //------------------------------------------------------
 
-// PHẦN DELETE POST
+// delete post
 
 router.delete("/posts/delete", (req, res) => {
 	let post_id = req.body.id
@@ -456,6 +665,7 @@ router.delete("/posts/delete", (req, res) => {
 
 	if (data) {
 		data.then(result => {
+			console.log("res :", res)
 			res.json({ status_code: 200 })
 		}).catch(err => {
 			res.json({ status_code: 404 })
@@ -465,161 +675,6 @@ router.delete("/posts/delete", (req, res) => {
 	}
 })
 
-//------------------------------------------------------
-
-// DANH SÁCH USER
-router.get("/users", (req, res) => {
-	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-	if (req.session.user) {
-		let data = userMd.getAllUsers()
-
-		data.then(users => {
-			let data = {
-				users: users,
-				err: false
-			}
-
-			res.render("admin/users/user", { data: data })
-		}).catch(err => {
-			let data = {
-				err: "Could not get user info"
-			}
-			res.render("admin/users/user", { data: data })
-		})
-	} else {
-		res.redirect("/admin/signin")
-	}
-})
-
-//-------------------------------------------------
-
-// PHẦN SKILL
-
-router.get("/skills/new", (req, res) => {
-	res.render("admin/skills/new", { err: false })
-})
-
-//post skills
-router.post("/skills/new", (req, res) => {
-	let params = req.body
-
-	//check lỗi
-
-	if (params.title.trim() == 0 || params.html_icon.trim() == 0) {
-		res.render("admin/skills/new", {
-			err: "Bạn phải nhập đầy đủ các trường"
-		})
-	} else {
-		let date = new Date()
-		params.created_at = date
-		params.updated_at = date
-
-		let data = skillMd.addSkill(params)
-
-		data.then(skill => {
-			res.redirect("/blog")
-		}).catch(err => {
-			res.render("admin/skills/new", {
-				result: false,
-				data: {},
-				message: `Err = ${err}`
-			})
-		})
-	}
-})
-
-// edit skills
-const reponseObject = (error, data, message) => {
-	if (error) {
-		return {
-			data: {},
-			error: `Err = ${error}`,
-			message
-		}
-	} else {
-		return { data, error: null, message }
-	}
-}
-router.get("/skills/edit/:id", async (req, res) => {
-	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-
-	let params = req.params
-	let id = params.id
-	try {
-		let skills = await skillMd.getSkillById(id)
-		let skill = skills[0]
-		res.render("admin/skills/edit", { skill: skill, err: false })
-	} catch (err) {
-		res.render("admin/skills/edit", {
-			err: "Không icons nào như vậy"
-		})
-	}
-})
-
-// update skills
-
-router.put("/skills/edit/", async (req, res) => {
-	let params = req.body
-	try {
-		let data = await skillMd.updateSkill(params)
-		res.json({ status_code: 200, data })
-	} catch (error) {
-		res.json({ status_code: 500 })
-	}
-})
-
-//delete skills
-
-router.delete("/skills/delete", async (req, res) => {
-	let skill_id = req.body.id
-	try {
-		let data = skillMd.deleteSkill(skill_id)
-		res.json({ status_code: 200 })
-	} catch (error) {
-		res.json({ status_code: 404 })
-	}
-})
-//-------------------------------------------------
-// PHẦN PROJECT
-
-router.get("/projects/new", (req, res) => {
-	res.render("admin/projects/new", { err: false })
-})
-
-//post project
-router.post("/projects/new", (req, res) => {
-	let params = req.body
-
-	//check lỗi
-	if (
-		params.title.trim() == 0 ||
-		params.intro.trim() == 0 ||
-		params.description.trim() == 0 ||
-		params.link_project.trim() == 0
-	) {
-		res.render("admin/projects/new", {
-			err: "Bạn phải nhập đầy đủ các trường"
-		})
-	} else {
-		if (params.link_images.trim() == 0) {
-			params.link_images = "/static/imgs/user.png"
-		}
-		let date = new Date()
-		params.created_at = date
-		params.updated_at = date
-
-		let data = projectMd.addProject(params)
-
-		data.then(project => {
-			res.redirect("/blog")
-		}).catch(err => {
-			res.render("admin/projects/new", {
-				result: false,
-				data: {},
-				message: `Err = ${err}`
-			})
-		})
-	}
-})
+//----------------------------------------------------
 
 module.exports = router

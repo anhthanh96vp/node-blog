@@ -1,13 +1,21 @@
 function Skill() {
+	//Đường link localhost
+	const url = `${location.protocol}//${document.domain}:${location.port}`
 	$(".skill_edit").click(function(e) {
 		let params = {
-			id: $(".id").val(),
-			title: $(".title").val(),
-			html_icon: $(".html_icon").val()
+			id: $(".id")
+				.val()
+				.trim(),
+			title: $(".title")
+				.val()
+				.trim(),
+			html_icon: $(".html_icon")
+				.val()
+				.trim()
 		}
 
 		//Đường link localhost
-		let url = `${location.protocol}//${document.domain}:${location.port}`
+
 		$.ajax({
 			url: url + "/admin/skills/edit",
 			type: "PUT",
@@ -28,15 +36,12 @@ function Skill() {
 
 	$(".skill_delete").click(function(e) {
 		//Lấy số id của post
-		let post_id = $(this).attr("post_id")
-
-		//Đường link localhost
-		let url = `${location.protocol}//${document.domain}:${location.port}`
+		let skill_id = $(this).attr("skill_id")
 
 		$.ajax({
 			url: url + "/admin/skills/delete",
 			type: "DELETE",
-			data: { id: post_id },
+			data: { id: skill_id },
 			dataType: "json",
 			success: res => {
 				if (res && res.status_code == 200) {

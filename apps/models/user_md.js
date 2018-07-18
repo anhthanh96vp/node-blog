@@ -4,6 +4,25 @@ const conn = db.getConnection()
 
 //import module promise
 
+const getAllUsers = () => {
+	let promise = new Promise((resolve, reject) => {
+		// hàm xử lý khí connect server sau đó select user trên database
+		let query = conn.query(
+			//SHOW tất cả bảng users
+			"SELECT * FROM users",
+			(err, users) => {
+				if (err) {
+					reject(err)
+				} else {
+					//Trả về mảng chứa data users đều có email như nhập vào
+					resolve(users)
+				}
+			}
+		)
+	})
+	return promise
+}
+
 //Hàm insert user lên database
 const addUser = user => {
 	if (user) {
@@ -50,23 +69,27 @@ const getUserByEmail = email => {
 	return false
 }
 
-const getAllUsers = () => {
-	let promise = new Promise((resolve, reject) => {
-		// hàm xử lý khí connect server sau đó select user trên database
-		let query = conn.query(
-			//SHOW tất cả bảng users
-			"SELECT * FROM users",
-			(err, users) => {
-				if (err) {
-					reject(err)
-				} else {
-					//Trả về mảng chứa data users đều có email như nhập vào
-					resolve(users)
+const getUserById = id => {
+	if (id) {
+		let promise = new Promise((resolve, reject) => {
+			// hàm xử lý khí connect server sau đó select user trên database
+			let query = conn.query(
+				//SHOW bảng users tìm các email giống với email nhập vào
+				"SELECT * FROM users WHERE ?",
+				{ id: id },
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						//Trả về mảng chứa data users đều có email như nhập vào
+						resolve(result)
+					}
 				}
-			}
-		)
-	})
-	return promise
+			)
+		})
+		return promise
+	}
+	return false
 }
 
-module.exports = { addUser, getUserByEmail, getAllUsers }
+module.exports = { addUser, getUserByEmail, getAllUsers, getUserById }

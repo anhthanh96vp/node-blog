@@ -2,10 +2,19 @@ function Post() {
 	function bindEvent() {
 		$(".post_edit").click(function(e) {
 			let params = {
-				id: $(".id").val(),
-				title: $(".title").val(),
-				content: tinymce.get("content").getContent(),
-				author: $(".author").val()
+				id: $(".id")
+					.val()
+					.trim(),
+				title: $(".title")
+					.val()
+					.trim(),
+				content: tinymce
+					.get("content")
+					.getContent()
+					.trim(),
+				author: $(".author")
+					.val()
+					.trim()
 			}
 
 			//Đường link localhost
@@ -28,7 +37,7 @@ function Post() {
 						location.reload()
 					}
 				},
-				error: function(request, msg, error) {
+				error: function(res) {
 					if (res && res.status_code == 500) {
 						alert(`error = ${JSON.stringify(error)}`)
 					}
@@ -45,7 +54,7 @@ function Post() {
 				location.protocol + "//" + document.domain + ":" + location.port
 
 			$.ajax({
-				url: baseUrl + "/admin/post/delete",
+				url: baseUrl + "/admin/posts/delete",
 				type: "DELETE",
 				data: { id: post_id },
 				dataType: "json",
@@ -54,7 +63,7 @@ function Post() {
 						location.reload()
 					}
 				},
-				error: function(request, msg, error) {
+				error: function(error) {
 					if (res && res.status_code == 404) {
 						alert(`error = ${JSON.stringify(error)}`)
 					}
