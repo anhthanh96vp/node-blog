@@ -4,11 +4,11 @@
 		"portMYSQL": 8000
 	},
 	"mysql": {
-		"host": "localhost",
+		"host": "sql9.freemysqlhosting.net",
 		"port": 3306,
-		"database": "blog_codeto",
-		"user": "root",
-		"password": ""
+		"database": "sql9247545",
+		"user": "sql9247545",
+		"password": "zcnwJJ7hgZ"
 	},
 	"salt": 10,
 	"secret_key": "secretkey"

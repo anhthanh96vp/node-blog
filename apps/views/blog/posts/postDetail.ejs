@@ -22,7 +22,7 @@
 
 <body id="page-top">
 
-    <%-include ../layout/nav%>
+    <%-include ../layout/nav-2%>
 
         <%-include ../layout/header%>
 
@@ -52,12 +52,12 @@
                         </span>
                     </div>
                     <div>
-                        <span class="badge">Tác giả :
+                        <span class="badge">Tác giả:
                             <%if(data && data.post){%>
                                 <%= data.post.author%>
                                     <%}%>
                         </span>
-                        <span class="badge">Cập nhật ngày
+                        <span class="badge">Cập nhật:
                             <%if(data && data.post){%>
                                 <%= data.post.updated_at%>
                                     <%}%>
@@ -73,13 +73,13 @@
                         </p>
                     </div>
                     <div>
-                        <span class="badge">Tác giả :
+                        <span class="badge">Tác giả:
                             <%if(data && data.post){%>
                                 <%= data.post.author%>
                                     <%}%>
                         </span>
 
-                        <span class="badge">Cập nhật ngày
+                        <span class="badge">Cập nhật:
                             <%if(data && data.post){%>
                                 <%= data.post.updated_at%>
                                     <%}%>

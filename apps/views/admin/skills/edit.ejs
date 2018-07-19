@@ -26,13 +26,12 @@
                                 </div>
                                 <div>
                                     <div>
-                                        <div  id="err-danger">
+                                        <div id="err-danger">
                                             <%if(err){%>
                                                 <div id="login-alert" class="alert alert-danger col-sm-12">
                                                     <%= err%>
                                                 </div>
                                                 <%}%>
-                                               
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +41,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form action="" method="" role="form">
+                                    <form role="form">
                                         <div>
                                             <input id="id" type="hidden" name="id" tabindex="1" class="form-control id" placeholder="Id" value="<% if(skill && skill.id) {%> <%= skill.id%> <%} %>">
                                         </div>
@@ -56,9 +55,10 @@
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
                                                     <input type="button" tabindex="4" class="form-control btn btn-success skill_edit" value="Edit icon skill">
+                                                </div>
                                             </div>
-                                        </div>
                                     </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -66,10 +66,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <%- include ../layout/footer%>
-        <%- include ../layout/bottom%>
-            <script src="/static/js/skill.js"></script>
+        <%- include ../layout/footer%>
+            <%- include ../layout/bottom%>
+                <script src="/static/js/skill.js"></script>
 </body>
 
 </html>

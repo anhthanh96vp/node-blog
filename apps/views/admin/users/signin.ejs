@@ -7,9 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Singin</title>
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+    <%- include ../layout/head%>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js" integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a"
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -43,8 +47,7 @@
                                     </span>
                                     <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
                                 </div>
-
-                                <div style="margin-top:10px" class="form-group">                                 
+                                <div style="margin-top:10px" class="form-group">
                                     <div class="col-sm-12 controls">
                                         <button id="btn-login" type="submit" class="btn btn-success" value="login">Login </button>
                                     </div>
@@ -66,7 +69,7 @@
             </div>
         </div>
     </div>
-
+    <%- include ../layout/bottom%>
 </body>
 
 </html>

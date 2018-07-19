@@ -12,6 +12,7 @@ import helper from "../helpers/helper"
 
 // import validateEmail để định dạng dữ liệu đầu vào
 import { validateEmail } from "../helpers/validation"
+import { CLIENT_RENEG_LIMIT } from "tls"
 
 //-----------------------------------------------------
 
@@ -96,6 +97,7 @@ router.post("/signup", (req, res) => {
 				password: codePassword.trim(),
 				first_name: user.firstname,
 				last_name: user.lastname,
+				avatar: user.avatar,
 				created_at: date,
 				updated_at: date
 			}
@@ -201,9 +203,8 @@ router.post("/signin", (req, res) => {
 						if (status) {
 							// đẩy thông tin user vào session
 							req.session.user = user
-
+							req.session.save()
 							console.log(req.session.user)
-
 							res.redirect("/admin/")
 						} else {
 							res.render("admin/users/signin", {
@@ -231,6 +232,17 @@ router.post("/signin", (req, res) => {
 	}
 })
 
+
+router.get("/logout", (req, res) => {
+	req.session.destroy()
+	res.json({
+		result: "Success",
+		data: {},
+		description: `Đăng xuất thành công`
+	})
+})
+
+
 //----------------------------------------------
 
 // PHẦN RENDER DỮ LIỆU TRANG ADMIN
@@ -239,26 +251,31 @@ router.post("/signin", (req, res) => {
 router.get("/", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 
-	let users = userMd.getAllUsers()
-	let posts = postMd.getAllPosts()
-	let skills = skillMd.getAllSkills()
-	let projects = projectMd.getAllProjects()
-
-	Promise.all([users, skills, projects, posts])
-		.then(data => {
-			res.render("admin/dashboard", {
-				result: true,
-				data: data,
-				message: "Successfull"
+	if (req.session.user) {
+		let users = userMd.getAllUsers()
+		let posts = postMd.getAllPosts()
+		let skills = skillMd.getAllSkills()
+		let projects = projectMd.getAllProjects()
+		let userLogin = req.session.user
+		Promise.all([users, skills, projects, posts])
+			.then(data => {
+				res.render("admin/dashboard", {
+					result: true,
+					data: data,
+					userLogin: userLogin,
+					message: "Successfull"
+				})
 			})
-		})
-		.catch(reason => {
-			res.render("admin/dashboard", {
-				result: false,
-				data: {},
-				message: `Err = ${reason}`
+			.catch(reason => {
+				res.render("admin/dashboard", {
+					result: false,
+					data: {},
+					message: `Err = ${reason}`
+				})
 			})
-		})
+	} else {
+		res.redirect("/admin/signin")
+	}
 })
 
 //------------------------------------------------
@@ -266,47 +283,86 @@ router.get("/", (req, res) => {
 // RENDER TRANG CHI TIẾT ADM
 
 router.get("/users", async (req, res) => {
-	try {
-		let users = await userMd.getAllUsers()
-		let data = { users: users, err: false }
-		res.render("admin/users/detailUsers", { data: data })
-	} catch (err) {
-		res.render("admin/users/detailUsers", {
-			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
-		})
+	if (req.session.user) {
+		let userLogin = req.session.user
+		try {
+			let users = await userMd.getAllUsers()
+			let data = { users: users, err: false }
+
+			res.render("admin/users/detailUsers", {
+				data: data,
+				userLogin: userLogin
+			})
+		} catch (err) {
+			res.render("admin/users/detailUsers", {
+				userLogin: userLogin,
+				err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 router.get("/skills", async (req, res) => {
-	try {
-		let skills = await skillMd.getAllSkills()
-		let data = { skills: skills, err: false }
-		res.render("admin/skills/detailSkills", { data: data })
-	} catch (err) {
-		res.render("admin/skills/detailSkills", {
-			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
-		})
+	if (req.session.user) {
+		let userLogin = req.session.user
+		try {
+			let skills = await skillMd.getAllSkills()
+			let data = { skills: skills, err: false }
+
+			res.render("admin/skills/detailSkills", {
+				data: data,
+				userLogin: userLogin
+			})
+		} catch (err) {
+			res.render("admin/skills/detailSkills", {
+				userLogin: userLogin,
+				err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 router.get("/projects", async (req, res) => {
-	try {
-		let projects = await projectMd.getAllProjects()
-		let data = { projects: projects, err: false }
-		res.render("admin/projects/detailProjects", { data: data })
-	} catch (err) {
-		res.render("admin/projects/detailProjects", {
-			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
-		})
+	if (req.session.user) {
+		let userLogin = req.session.user
+		try {
+			let projects = await projectMd.getAllProjects()
+			let data = { projects: projects, err: false }
+
+			res.render("admin/projects/detailProjects", {
+				data: data,
+				userLogin: userLogin
+			})
+		} catch (err) {
+			res.render("admin/projects/detailProjects", {
+				userLogin: userLogin,
+				err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 router.get("/posts", async (req, res) => {
-	try {
-		let posts = await postMd.getAllPosts()
-		let data = { posts: posts, err: false }
-		res.render("admin/posts/detailPosts", { data: data })
-	} catch (err) {
-		res.render("admin/posts/detailPosts", {
-			err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
-		})
+	if (req.session.user) {
+		let userLogin = req.session.user
+		try {
+			let posts = await postMd.getAllPosts()
+			let data = { posts: posts, err: false }
+			res.render("admin/posts/detailPosts", {
+				data: data,
+				userLogin: userLogin
+			})
+		} catch (err) {
+			res.render("admin/posts/detailPosts", {
+				userLogin: userLogin,
+				err: `Dữ liệu không tìm thấy hoặc đã bị xóa`
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 
@@ -316,16 +372,26 @@ router.get("/posts", async (req, res) => {
 
 router.get("/users/edit/:id", async (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-	let params = req.params
-	let id = params.id
-	try {
-		let users = await userMd.getUserById(id)
-		let user = users[0]
-		res.render("admin/users/edit", { user: user, err: false })
-	} catch (err) {
-		res.render("admin/users/edit", {
-			err: "Không có user nào như vậy"
-		})
+	if (req.session.user) {
+		let params = req.params
+		let id = params.id
+		let userLogin = req.session.user
+		try {
+			let users = await userMd.getUserById(id)
+			let user = users[0]
+			res.render("admin/users/edit", {
+				user: user,
+				userLogin: userLogin,
+				err: false
+			})
+		} catch (err) {
+			res.render("admin/users/edit", {
+				userLogin: userLogin,
+				err: "Không có user nào như vậy"
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 
@@ -334,31 +400,51 @@ router.get("/users/edit/:id", async (req, res) => {
 router.put("/users/edit/", async (req, res) => {
 	let params = req.body
 	let id = params.id
-
+	let userLogin = req.session.user
 	if (
 		params.password.trim().length < 6 ||
 		params.first_name.trim() == "" ||
 		params.last_name.trim() == ""
 	) {
 		res.render(`admin/users/edit`, {
+			userLogin: userLogin,
 			user: {},
 			err: "Bạn phải nhập đầy đủ các trường"
 		})
 	} else if (params.password != params.repassword) {
 		res.render("admin/users/edit", {
+			userLogin: userLogin,
 			user: {},
 			err: "Nhập lại password không chính xác"
 		})
 	} else {
-		try {
-			let data = await userMd.updateUser(params)
-			res.json({ status_code: 200 })
-		} catch (error) {
-			res.json(
-				{ status_code: 500 },
-				{ err: "Bạn phải nhập đầy đủ các trường" }
-			)
-		}
+		//mã hóa password
+		helper
+			.hashPassword(params.password)
+
+			//NẾU bên hashPassword trả về reresolve thì then sẽ chạy
+			.then(codePassword => {
+				params.password = codePassword
+				try {
+					let data = userMd.updateUser(params)
+					res.json({ status_code: 200 })
+				} catch (error) {
+					res.json(
+						{ status_code: 500 },
+						{ err: "Bạn phải nhập đầy đủ các trường" }
+					)
+				}
+			})
+
+			//NẾU bên hashPassword trả về reject thì catch sẽ chạy
+			.catch(err => {
+				res.render("admin/users/edit", {
+					userLogin: userLogin,
+					data: {
+						err: "Mã hóa password thất bại"
+					}
+				})
+			})
 	}
 })
 //delete user
@@ -378,15 +464,22 @@ router.delete("/users/delete", async (req, res) => {
 // PHẦN SKILL
 
 router.get("/skills/new", (req, res) => {
-	res.render("admin/skills/new", { err: false })
+	if (req.session.user) {
+		let userLogin = req.session.user
+		res.render("admin/skills/new", { userLogin: userLogin, err: false })
+	} else {
+		res.redirect("/admin/signin")
+	}
 })
 
 //post skills
 router.post("/skills/new", (req, res) => {
 	let params = req.body
 	//check lỗi
+	let userLogin = req.session.user
 	if (params.title.trim() == 0 || params.html_icon.trim() == 0) {
 		res.render("admin/skills/new", {
+			userLogin: userLogin,
 			err: "Bạn phải nhập đầy đủ các trường"
 		})
 	} else {
@@ -401,6 +494,7 @@ router.post("/skills/new", (req, res) => {
 		}).catch(err => {
 			res.render("admin/skills/new", {
 				result: false,
+				userLogin: userLogin,
 				data: {},
 				message: `Err = ${err}`
 			})
@@ -412,36 +506,58 @@ router.post("/skills/new", (req, res) => {
 
 router.get("/skills/edit/:id", async (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-
-	let params = req.params
-	let id = params.id
-	try {
-		let skills = await skillMd.getSkillById(id)
-		let skill = skills[0]
-		res.render("admin/skills/edit", { skill: skill, err: false })
-	} catch (err) {
-		res.render("admin/skills/edit", {
-			err: "Không có icons nào như vậy"
-		})
-	}
+	// if (req.session.user) {
+		let userLogin = req.session.user
+		let params = req.params
+		let id = params.id
+		try {
+			let skills = await skillMd.getSkillById(id)
+			let skill = skills[0]
+			res.render("admin/skills/edit", {
+				skill: skill,
+				userLogin: userLogin,
+				err: false
+			})
+		} catch (err) {
+			res.render("admin/skills/edit", {
+				userLogin: userLogin,
+				err: "Không có icons nào như vậy"
+			})
+		}
+	// } else {
+	// 	res.redirect("/admin/signin")
+	// }
 })
 
 // update skills
 
-router.put("/skills/edit/", async (req, res) => {
-	let params = req.body
+router.put("/skills/edit", async (req, res) => {
+	let params = req.body	
+	let userLogin = req.session.user
 	if (params.title.trim() == "" || params.html_icon.trim() == "") {
-		res.render("admin/skills/edit", {
+		res.render("admin/skills/edit/" + params.id, {
+			userLogin: userLogin,
 			skill: {},
 			err: "Hãy điền đẩy đủ thông tin"
 		})
 	} else {
-		try {
-			let data = await skillMd.updateSkill(params)
-			res.json({ status_code: 200, data })
-		} catch (error) {
-			res.json({ status_code: 500 })
-		}
+			try {
+				let data = await skillMd.updateSkill(params)
+				// res.json({ status_code: 200, data})
+				res.render("admin/skills/detailSkills", {
+					userLogin: userLogin,
+					skill: {},
+					data: data,
+					err: false
+				})
+			} catch (error) {
+				// res.json({ status_code: 500 })
+				res.render("admin/skills/edit/" + params.id, {
+					userLogin: userLogin,
+					skill: {},
+					err: "Hãy điền đẩy đủ thông tin"
+				})
+			}
 	}
 })
 
@@ -460,13 +576,18 @@ router.delete("/skills/delete", async (req, res) => {
 // PHẦN PROJECT
 
 router.get("/projects/new", (req, res) => {
-	res.render("admin/projects/new", { err: false })
+	if (req.session.user) {
+		let userLogin = req.session.user
+		res.render("admin/projects/new", { userLogin: userLogin, err: false })
+	} else {
+		res.redirect("/admin/signin")
+	}
 })
 
 //post project
 router.post("/projects/new", (req, res) => {
 	let params = req.body
-
+	let userLogin = req.session.user
 	//check lỗi
 	if (
 		params.title.trim() == 0 ||
@@ -475,6 +596,7 @@ router.post("/projects/new", (req, res) => {
 		params.link_project.trim() == 0
 	) {
 		res.render("admin/projects/new", {
+			userLogin: userLogin,
 			err: "Bạn phải nhập đầy đủ các trường"
 		})
 	} else {
@@ -492,6 +614,7 @@ router.post("/projects/new", (req, res) => {
 		}).catch(err => {
 			res.render("admin/projects/new", {
 				result: false,
+				userLogin: userLogin,
 				data: {},
 				message: `Err = ${err}`
 			})
@@ -501,18 +624,28 @@ router.post("/projects/new", (req, res) => {
 
 router.get("/projects/edit/:id", async (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
+	if (req.session.user) {
+		let userLogin = req.session.user
+		let params = req.params
+		let id = params.id
 
-	let params = req.params
-	let id = params.id
-
-	try {
-		let projects = await projectMd.getProjectById(id)
-		let project = projects[0]
-		res.render("admin/projects/edit", { project: project, err: false })
-	} catch (err) {
-		res.render("admin/projects/edit", {
-			err: "Không có project nào như vậy"
-		})
+		try {
+			let projects = await projectMd.getProjectById(id)
+			let project = projects[0]
+			res.render("admin/projects/edit", {
+				project: project,
+				userLogin: userLogin,
+				err: false
+			})
+		} catch (err) {
+			res.render("admin/projects/edit", {
+				project: {},
+				userLogin: userLogin,
+				err: "Không có project nào như vậy"
+			})
+		}
+	} else {
+		res.redirect("/admin/signin")
 	}
 })
 
@@ -520,14 +653,16 @@ router.get("/projects/edit/:id", async (req, res) => {
 
 router.put("/projects/edit/", async (req, res) => {
 	let params = req.body
-
+	let userLogin = req.session.user
 	if (
 		params.title.trim() == 0 ||
 		params.intro.trim() == 0 ||
 		params.description.trim() == 0 ||
 		params.link_project.trim() == 0
 	) {
-		res.render("admin/projects/edit/:" + id, {
+		res.render("admin/projects/edit", {
+			userLogin: userLogin,
+			project: {},
 			err: "Bạn phải nhập đầy đủ các trường"
 		})
 	} else {
@@ -538,7 +673,6 @@ router.put("/projects/edit/", async (req, res) => {
 			let data = await projectMd.updateProject(params)
 			res.json({ status_code: 200 })
 		} catch (error) {
-			// console.log(error);
 			res.json({ status_code: 500 })
 		}
 	}
@@ -564,34 +698,39 @@ router.delete("/projects/delete", async (req, res) => {
 // add post
 router.get("/posts/new", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-
-	res.render("admin/posts/new", {
-		data: {
-			err: false
-		}
-	})
+	if (req.session.user) {
+		let userLogin = req.session.user
+		res.render("admin/posts/new", {
+			data: {
+				err: false
+			},
+			userLogin: userLogin
+		})
+	} else {
+		res.redirect("/admin/signin")
+	}
 })
 
 //Tương tự như bên post user
 router.post("/posts/new", (req, res) => {
 	let params = req.body
-
+	let userLogin = req.session.user
 	//check lỗi
 	if (
 		params.title.trim() == 0 ||
 		params.content.trim() == 0 ||
 		params.author.trim() == 0
 	) {
+		console.log(userLogin)
 		res.render("admin/posts/new", {
+			userLogin: userLogin,
 			data: { err: "Bạn phải nhập đầy đủ các trường" }
 		})
 	} else {
 		let date = new Date()
-
 		params.created_at = date
 		params.updated_at = date
-
-		params.avatar = "/static/imgs/user"
+		params.avatar = userLogin.avatar
 		let data = postMd.addPost(params)
 
 		data.then(result => {
@@ -612,36 +751,44 @@ router.get("/posts/edit/:id", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 
 	if (req.session.user) {
-		let params = req.params
-		let id = params.id
-		let data = postMd.getPostById(id)
+		if (req.session.user) {
+			let userLogin = req.session.user
+			let params = req.params
+			let id = params.id
+			let data = postMd.getPostById(id)
 
-		if (data) {
-			data.then(posts => {
-				//chọn thằng post giống id đầu tiên
-				let post = posts[0]
+			if (data) {
+				data.then(posts => {
+					//chọn thằng post giống id đầu tiên
+					let post = posts[0]
 
-				let data = {
-					post: post,
-					err: false
-				}
+					let data = {
+						post: post,
+						err: false
+					}
 
-				res.render("admin/posts/edit", {
-					data: data
+					res.render("admin/posts/edit", {
+						data: data,
+						userLogin: userLogin
+					})
+				}).catch(err => {
+					let data = {
+						err: "Không có bài viết nào như vậy"
+					}
+					res.render("admin/posts/edit", {
+						data: data,
+						userLogin: userLogin
+					})
 				})
-			}).catch(err => {
-				let data = {
-					err: "Không có bài viết nào như vậy"
-				}
+			} else {
+				let data = { err: "Không có bài viết nào như vậy" }
 				res.render("admin/posts/edit", {
-					data: data
+					data: data,
+					userLogin: userLogin
 				})
-			})
+			}
 		} else {
-			let data = { err: "Không có bài viết nào như vậy" }
-			res.render("admin/posts/edit", {
-				data: data
-			})
+			res.redirect("/admin/signin")
 		}
 	} else {
 		res.redirect("/admin/signin")

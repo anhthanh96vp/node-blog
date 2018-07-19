@@ -20,10 +20,15 @@ function Skill() {
 			url: url + "/admin/skills/edit",
 			type: "PUT",
 			data: params,
+			headers:{
+				'Content-Type':'application/x-www-form-urlencoded'
+			},
 			dataType: "json",
 			success: function(res) {
+				console.log('dsadsa')
 				if (res && res.status_code == 200) {
 					location.reload()
+					
 				}
 			},
 			error: function(res, error) {
@@ -46,6 +51,7 @@ function Skill() {
 				success: res => {
 					if (res && res.status_code == 200) {
 						location.reload()
+					
 					}
 				},
 				error: (res, error) => {

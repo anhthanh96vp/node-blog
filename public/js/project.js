@@ -29,7 +29,7 @@ function Project() {
 			dataType: "json",
 			success: res => {
 				if (res && res.status_code == 200) {
-					// location.reload()
+					location.reload()
 				}
 			},
 			error: (res, error) => {
