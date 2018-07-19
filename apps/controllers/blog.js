@@ -37,9 +37,10 @@ router.get("/", (req, res) => {
 router.get("/post/:id", (req, res) => {
 	let data = postMd.getPostById(req.params.id)
 	data.then(posts => {
+		//add view len database
+		let view = postMd.addViewById(req.params.id)
 		let post = posts[0]
 		let data = { post: post, err: false }
-		console.log("data :", data)
 		res.render("blog/posts/postDetail", { data: data })
 	}).catch(err => {
 		let data = { err: "Không tìm thấy bài viết" }
@@ -47,4 +48,25 @@ router.get("/post/:id", (req, res) => {
 	})
 })
 
+router.put("/posts/checklike", (req, res) => {
+	let params = req.body
+
+	if (params.checkLike == true) {
+		let data = postMd.addLikeById(params)
+		data.then(result => {
+			let data = result
+			res.json({ status_code: 200, data })
+		}).catch(err => {
+			res.json({ status_code: 404 })
+		})
+	} else {
+		let data = postMd.minusLikeById(params)
+		data.then(result => {
+			let data = result
+			res.json({ status_code: 200, data })
+		}).catch(err => {
+			res.json({ status_code: 404 })
+		})
+	}
+})
 module.exports = router

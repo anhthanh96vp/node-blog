@@ -6,9 +6,11 @@
         <h3 class="section-subheading text-muted">Một số bài viết yêu thích được cập nhật</h3>
       </div>
     </div>
-    <div class="row">
+    <div class="row ">
       <% if(data && data[2]){%>
         <% data[2].forEach(post=>{%>
+          <input type="hidden" name="id" tabindex="1" class="form-control id" placeholder="Id" value="<%= post.id%>">
+          <input type="hidden" name="like_post" tabindex="1" class="form-control id" placeholder="Id" value="<%= post.like_post%>">
           <div class="col-xs-12 col-md-6">
             <div class="posts">
               <div class="posts__avatar">
@@ -40,9 +42,9 @@
                         </p>
                       </li>
                       <li>
-                        <a href="">
+                        <p class="like_post">
                           <i class="fa fa-thumbs-up"></i>
-                        </a>
+                        </p>
                         <p>
                           <%= post.like_post%>
                         </p>
@@ -51,9 +53,9 @@
                   </div>
                 </div>
                 <div class="posts__detail__content">
-                  <p>
+                  <div class="post_limit">
                     <%- post.content%>
-                  </p>
+                  </div>
                   </p>
                 </div>
                 <div class="posts__detail__time">

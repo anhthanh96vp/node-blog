@@ -126,11 +126,72 @@ const deletePost = id => {
 	}
 	return false
 }
+
+const addLikeById = params => {
+	if (params) {
+		let promise = new Promise((resolve, reject) => {
+			let query = conn.query(
+				"UPDATE posts SET like_post = like_post + 1 WHERE id = ?",
+				params.id,
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						resolve(result)
+					}
+				}
+			)
+		})
+		return promise
+	}
+	return false
+}
+const minusLikeById = params => {
+	if (params) {
+		let promise = new Promise((resolve, reject) => {
+			let query = conn.query(
+				"UPDATE posts SET like_post = like_post - 1 WHERE id = ?",
+				params.id,
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						resolve(result)
+					}
+				}
+			)
+		})
+		return promise
+	}
+	return false
+}
+const addViewById = id => {
+	if (id) {
+		let promise = new Promise((resolve, reject) => {
+			let query = conn.query(
+				"UPDATE posts SET view_post = view_post + 1 WHERE id = ?",
+				id,
+				(err, result) => {
+					if (err) {
+						reject(err)
+					} else {
+						resolve(result)
+					}
+				}
+			)
+		})
+		return promise
+	}
+	return false
+}
 module.exports = {
 	getAllPosts,
 	getAllPostsLimit,
 	addPost,
 	getPostById,
 	updatePost,
-	deletePost
+	deletePost,
+	addLikeById,
+	minusLikeById,
+	addViewById
 }

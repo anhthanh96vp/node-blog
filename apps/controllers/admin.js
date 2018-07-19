@@ -232,7 +232,6 @@ router.post("/signin", (req, res) => {
 	}
 })
 
-
 router.get("/logout", (req, res) => {
 	req.session.destroy()
 	res.json({
@@ -241,7 +240,6 @@ router.get("/logout", (req, res) => {
 		description: `Đăng xuất thành công`
 	})
 })
-
 
 //----------------------------------------------
 
@@ -257,6 +255,7 @@ router.get("/", (req, res) => {
 		let skills = skillMd.getAllSkills()
 		let projects = projectMd.getAllProjects()
 		let userLogin = req.session.user
+
 		Promise.all([users, skills, projects, posts])
 			.then(data => {
 				res.render("admin/dashboard", {
@@ -269,6 +268,7 @@ router.get("/", (req, res) => {
 			.catch(reason => {
 				res.render("admin/dashboard", {
 					result: false,
+					userLogin: userLogin,
 					data: {},
 					message: `Err = ${reason}`
 				})
@@ -421,7 +421,6 @@ router.put("/users/edit/", async (req, res) => {
 		//mã hóa password
 		helper
 			.hashPassword(params.password)
-
 			//NẾU bên hashPassword trả về reresolve thì then sẽ chạy
 			.then(codePassword => {
 				params.password = codePassword
@@ -507,23 +506,23 @@ router.post("/skills/new", (req, res) => {
 router.get("/skills/edit/:id", async (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
 	// if (req.session.user) {
-		let userLogin = req.session.user
-		let params = req.params
-		let id = params.id
-		try {
-			let skills = await skillMd.getSkillById(id)
-			let skill = skills[0]
-			res.render("admin/skills/edit", {
-				skill: skill,
-				userLogin: userLogin,
-				err: false
-			})
-		} catch (err) {
-			res.render("admin/skills/edit", {
-				userLogin: userLogin,
-				err: "Không có icons nào như vậy"
-			})
-		}
+	let userLogin = req.session.user
+	let params = req.params
+	let id = params.id
+	try {
+		let skills = await skillMd.getSkillById(id)
+		let skill = skills[0]
+		res.render("admin/skills/edit", {
+			skill: skill,
+			userLogin: userLogin,
+			err: false
+		})
+	} catch (err) {
+		res.render("admin/skills/edit", {
+			userLogin: userLogin,
+			err: "Không có icons nào như vậy"
+		})
+	}
 	// } else {
 	// 	res.redirect("/admin/signin")
 	// }
@@ -532,7 +531,7 @@ router.get("/skills/edit/:id", async (req, res) => {
 // update skills
 
 router.put("/skills/edit", async (req, res) => {
-	let params = req.body	
+	let params = req.body
 	let userLogin = req.session.user
 	if (params.title.trim() == "" || params.html_icon.trim() == "") {
 		res.render("admin/skills/edit/" + params.id, {
@@ -541,23 +540,23 @@ router.put("/skills/edit", async (req, res) => {
 			err: "Hãy điền đẩy đủ thông tin"
 		})
 	} else {
-			try {
-				let data = await skillMd.updateSkill(params)
-				// res.json({ status_code: 200, data})
-				res.render("admin/skills/detailSkills", {
-					userLogin: userLogin,
-					skill: {},
-					data: data,
-					err: false
-				})
-			} catch (error) {
-				// res.json({ status_code: 500 })
-				res.render("admin/skills/edit/" + params.id, {
-					userLogin: userLogin,
-					skill: {},
-					err: "Hãy điền đẩy đủ thông tin"
-				})
-			}
+		try {
+			let data = await skillMd.updateSkill(params)
+			// res.json({ status_code: 200, data})
+			res.render("admin/skills/detailSkills", {
+				userLogin: userLogin,
+				skill: {},
+				data: data,
+				err: false
+			})
+		} catch (error) {
+			// res.json({ status_code: 500 })
+			res.render("admin/skills/edit/" + params.id, {
+				userLogin: userLogin,
+				skill: {},
+				err: "Hãy điền đẩy đủ thông tin"
+			})
+		}
 	}
 })
 
