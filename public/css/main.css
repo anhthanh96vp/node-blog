@@ -1,3 +1,10 @@
 h1 {
     color: red;
 }
+
+.post_limit {
+    white-space: pre-wrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

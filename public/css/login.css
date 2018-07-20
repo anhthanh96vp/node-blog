@@ -27,10 +27,8 @@
 	background: #fff;
 	border-radius: 4px;
 	z-index: 99;
-	-webkit-box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1),
-		0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
-	box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1),
-		0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1), 0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 50px 100px rgba(50, 50, 93, 0.1), 0 15px 35px rgba(50, 50, 93, 0.15), 0 5px 15px rgba(0, 0, 0, 0.1);
 	-webkit-transform-origin: 50% 0;
 	transform-origin: 50% 0;
 	display: grid;
@@ -69,8 +67,7 @@
 	width: 150px;
 }
 
-.info__user a,
-.info__logout {
+.info__user a, .info__logout {
 	color: #000;
 	text-decoration: none;
 	cursor: pointer;
@@ -84,13 +81,11 @@
 	display: flex;
 }
 
-.info__user p,
-.info__logout p {
+.info__user p, .info__logout p {
 	padding-left: 6px;
 }
 
-.info__user a:hover,
-.info__logout:hover {
+.info__user a:hover, .info__logout:hover {
 	color: #ff9a00;
 }
 

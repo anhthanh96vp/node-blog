@@ -2,12 +2,21 @@ import express from "express"
 import axios from "axios"
 const router = express.Router()
 
+//--------------
+
+import rp from "request-promise"
+import cherio from "cheerio"
+
 //import post để kết nối tới database
 import postMd from "../models/post_md"
 import skillMd from "../models/skill_md"
 import projectMd from "../models/project_md"
 
-const api = "http://5b4ac9d830ebac001419f241.mockapi.io/api/v1/"
+const api = "https://viblo.asia/"
+
+import request from "request"
+const Nightmare = require("nightmare")
+const nightmare = Nightmare({ show: true })
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /blog
 // Lấy các bài post, skill, project trên database và render ra 1 list ở trang chủ
@@ -50,8 +59,9 @@ router.get("/post/:id", (req, res) => {
 
 router.put("/posts/checklike", (req, res) => {
 	let params = req.body
+	console.log('params.checkLike :', params.checkLike);
 
-	if (params.checkLike == true) {
+	if (params.checkLike) {
 		let data = postMd.addLikeById(params)
 		data.then(result => {
 			let data = result
@@ -59,7 +69,8 @@ router.put("/posts/checklike", (req, res) => {
 		}).catch(err => {
 			res.json({ status_code: 404 })
 		})
-	} else {
+	}
+	else{
 		let data = postMd.minusLikeById(params)
 		data.then(result => {
 			let data = result
@@ -68,5 +79,30 @@ router.put("/posts/checklike", (req, res) => {
 			res.json({ status_code: 404 })
 		})
 	}
+})
+router.get("/leech", async (req, res) => {
+	
+	const getLinkPhim14 = url => {
+		return new Promise((resolve, reject) => {
+			request(url, (error, response, body) => {
+				let link = ''
+				if (!error && response.statusCode == 200) {
+					let mUrl = body.match(/<iframe\ssrc="(https:[^"]+)"/i)
+					if (mUrl && mUrl[1]) {
+						link = mUrl[1]
+					}
+				}
+				resolve(link)
+			})
+		})
+	}
+
+	const synccode = async () => {
+		let url =
+		"http://phim14.net/xem-phim/ban-cung-la-nguoi_are-you-human-too.9257.298264.html"
+		let link = await getLinkPhim14(url)
+		console.log('link :', link);
+	}
+	synccode()
 })
 module.exports = router

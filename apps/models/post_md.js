@@ -128,6 +128,7 @@ const deletePost = id => {
 }
 
 const addLikeById = params => {
+	// console.log(params);
 	if (params) {
 		let promise = new Promise((resolve, reject) => {
 			let query = conn.query(
