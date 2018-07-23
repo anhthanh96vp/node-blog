@@ -4,19 +4,16 @@ const router = express.Router()
 
 //--------------
 
+import request from "request"
 import rp from "request-promise"
-import cherio from "cheerio"
+import cheerio from "cheerio"
+const Nightmare = require("nightmare")
+const nightmare = Nightmare({ show: true })
 
 //import post để kết nối tới database
 import postMd from "../models/post_md"
 import skillMd from "../models/skill_md"
 import projectMd from "../models/project_md"
-
-const api = "https://viblo.asia/"
-
-import request from "request"
-const Nightmare = require("nightmare")
-const nightmare = Nightmare({ show: true })
 
 // Vì đã được Include bên file index.js nên đường dẫn ở đây sẽ là /blog
 // Lấy các bài post, skill, project trên database và render ra 1 list ở trang chủ
@@ -57,52 +54,45 @@ router.get("/post/:id", (req, res) => {
 	})
 })
 
-router.put("/posts/checklike", (req, res) => {
-	let params = req.body
-	console.log('params.checkLike :', params.checkLike);
-
-	if (params.checkLike) {
-		let data = postMd.addLikeById(params)
-		data.then(result => {
-			let data = result
-			res.json({ status_code: 200, data })
-		}).catch(err => {
-			res.json({ status_code: 404 })
-		})
-	}
-	else{
-		let data = postMd.minusLikeById(params)
-		data.then(result => {
-			let data = result
-			res.json({ status_code: 200, data })
-		}).catch(err => {
-			res.json({ status_code: 404 })
-		})
-	}
-})
 router.get("/leech", async (req, res) => {
-	
-	const getLinkPhim14 = url => {
-		return new Promise((resolve, reject) => {
-			request(url, (error, response, body) => {
-				let link = ''
-				if (!error && response.statusCode == 200) {
-					let mUrl = body.match(/<iframe\ssrc="(https:[^"]+)"/i)
-					if (mUrl && mUrl[1]) {
-						link = mUrl[1]
-					}
+	var options = {
+		url:
+			"http://phim14.net/xem-phim/ban-cung-la-nguoi_are-you-human-too.9257.298264.html"
+	}
+	//request lấy body của link
+	request(options, function callback(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			// khai báo cheerio để sử dụng jquery server
+			const $ = cheerio.load(body)
+			let arrServer = []
+			$("#server_list .server_item").each(function() {
+				var arrEpi = []
+				$(this)
+					.find(".episode_list li")
+					.each(function() {
+						arrEpi.push({
+							number: $(this).text(),
+							url: $(this)
+								.find("a")
+								.attr("href")
+						})
+					})
+				console.log("arrEpi :", arrEpi)
+				var serverName = $(this)
+					.find("strong")
+					.text()
+					.replace(":", "")
+					.trim()
+					.toLocaleLowerCase()
+				if (serverName.indexOf("hot") !== -1) {
+					arrServer.push({
+						arrServer: serverName,
+						epis: arrEpi
+					})
 				}
-				resolve(link)
 			})
-		})
-	}
-
-	const synccode = async () => {
-		let url =
-		"http://phim14.net/xem-phim/ban-cung-la-nguoi_are-you-human-too.9257.298264.html"
-		let link = await getLinkPhim14(url)
-		console.log('link :', link);
-	}
-	synccode()
+			console.log("arrServer :", arrServer)
+		}
+	})
 })
 module.exports = router

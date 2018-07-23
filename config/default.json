@@ -1,7 +1,7 @@
 {
 	"server": {
 		"host": "0.0.0.0",
-		"portMYSQL": 3003
+		"portMYSQL": 9999
 	},
 	"mysql": {
 		"host": "localhost",
