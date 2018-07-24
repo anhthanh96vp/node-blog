@@ -5,7 +5,7 @@ import bodyParser from "body-parser"
 import socketio from "socket.io"
 //Sử dụng cái này phải cài đặt express
 import session from "express-session"
-var MySQLStore = require('express-mysql-session')(session);
+const MySQLStore = require('express-mysql-session')(session);
 
 
 const app = express()
@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 //để nhận được dữ liệu từ form data post lên và xử lý nó
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// CẤU HÌNH EXPRESS-SESSION
+// CẤU HÌNH EXPRESS-SESSION KẾT HỢP VỚI CONFIG
 const options = {
 	host: config.get("mysql.host"),
 	user: config.get("mysql.user"),
