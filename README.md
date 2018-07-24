@@ -1,6 +1,6 @@
-# Thành Nguyễn Profile
+# ThànhNguyễn Profile
 
-![Screenshot of my shell prompt](https://www.google.com.vn/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj4w7-EnLfcAhWMlJQKHaX4Bz4QjRx6BAgBEAU&url=https%3A%2F%2Fgiphy.com%2Fgifs%2Fstandard-HDQ4VtzTvSLf2&psig=AOvVaw0PmKTQo02KDKpSeGxBJ0i9&ust=1532503872241718)
+![Screenshot of my shell prompt](https://sv1.uphinhnhanh.com/images/2018/07/25/Untitled.png)
 
 ### Welcome to my Git
 This is my Git. 
@@ -14,7 +14,7 @@ This is my Git.
 You can clone the repository wherever you want. (I like to keep it in `~/Projects/`, with `~/projex` as a symlink.) The script will pull in the latest version and copy the files to your home folder.
 
 ```bash
-git clone https://github.com/namhbnam/namhbnam.github.io.
-```git
+git clone https://github.com/anhthanh96vp/node-blog.git
+
 
 
