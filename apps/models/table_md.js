@@ -95,34 +95,10 @@ const createUsers = () => {
 	})
 	return promise
 }
-const createTodos = () => {
-	let promise = new Promise((resolve, reject) => {
-		let query = conn.query(
-			`CREATE TABLE todos(
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            status VARCHAR(255) NOT NULL,
-            prioritize VARCHAR(255) NOT NULL,
-            describes MEDIUMTEXT NOT NULL,
-            created_at DATETIME,
-            updated_at DATETIME
-            ) CHARACTER SET=utf8;`,
-			(err, posts) => {
-				if (err) {
-					reject(err)
-				} else {
-					resolve(posts)
-				}
-			}
-		)
-	})
-	return promise
-}
 
 module.exports = {
 	createPosts,
 	createSkills,
 	createProjects,
-	createUsers,
-	createTodos
+	createUsers
 }
