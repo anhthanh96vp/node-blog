@@ -8,9 +8,9 @@ router.get("/", (req, res) => {
 	let skills = tableMd.createSkills()
 	let projects = tableMd.createProjects()
 	let users = tableMd.createUsers()
+	let todos = tableMd.createTodos()
 
-
-	Promise.all([users, skills, projects, posts])
+	Promise.all([users, skills, projects, posts, todos])
 		.then(data => {
 			res.render("admin/block/createTable", {
 				result: true,

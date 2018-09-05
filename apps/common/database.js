@@ -1,8 +1,8 @@
 import config from "config"
 import mysql from "mysql"
 
-const host = config.get("server.host")
-const portMYSQL = config.get("server.portMYSQL")
+// const host = config.get("server.host")
+// const portMYSQL = config.get("server.portMYSQL")
 
 //Lấy dữ liệu từ file config
 let options = {
@@ -22,7 +22,7 @@ const getConnection = () => {
 	if (!connection) {
 		connection.connect()
 	}
-	console.log("CONNECTION SUCCESSFULLY ------------- MYSQL")
+	console.log("CONNECTION SUCCESSFULLY")
 	return connection
 }
 

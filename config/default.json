@@ -1,14 +1,14 @@
 {
 	"server": {
 		"host": "0.0.0.0",
-		"portMYSQL": 9999
+		"port": 8888
 	},
 	"mysql": {
-		"host": "localhost",
+		"host": "us-mm-auto-gcp-east-01-a.cleardb.net",
 		"port": 3306,
-		"database": "blog_codeto",
-		"user": "root",
-		"password": ""
+		"database": "gcp_cb4e8996ecf1e9d0c3b1",
+		"user": "b04d88554f6219",
+		"password": "2dcd132bb72728b"
 	},
 	"salt": 10,
 	"key": "key",

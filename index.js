@@ -59,11 +59,11 @@ const controllers = require(__dirname + "/apps/controllers")
 app.use(controllers)
 
 const host = config.get("server.host")
-const portMYSQL = config.get("server.portMYSQL")
+const port = process.env.PORT || config.get("server.port")
 // Tạo cổng kết nối
 //Cài thêm module config
-let server = app.listen(portMYSQL, host, () => {
-	console.log(`Server is running: ${host} ${portMYSQL}`)
+let server = app.listen(port, host, () => {
+	console.log(`Server is running: ${host} ${port}`)
 })
 
 // Tích hợp socketio vào ứng dụng
