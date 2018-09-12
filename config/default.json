@@ -1,7 +1,7 @@
 {
 	"server": {
 		"host": "0.0.0.0",
-		"port": 8888
+		"port": 3000
 	},
 	"mysql": {
 		"host": "us-mm-auto-gcp-east-01-a.cleardb.net",

@@ -6,17 +6,50 @@ import userMd from "../models/user_md"
 import postMd from "../models/post_md"
 import skillMd from "../models/skill_md"
 import projectMd from "../models/project_md"
-
 // import helper để đẩy password đã được mã hóa
 import helper from "../helpers/helper"
 
 // import validateEmail để định dạng dữ liệu đầu vào
 import { validateEmail } from "../helpers/validation"
-import { CLIENT_RENEG_LIMIT } from "tls"
+
+import passport from "passport";
+
+//-----------------------------------------------------
+
+
+router.get("/login/facebook", passport.authenticate("facebook"));
+router.get(
+	"/login/facebook/callback",
+	passport.authenticate("facebook", {
+		// successRedirect: "/",
+		failureRedirect: "/admin/signup",
+		scope: ["email"],
+		session: false
+	}),
+	function (req, res) {
+		// req.session.user = req.user
+		req.session.status = "online";
+		req.session.save();
+		res.redirect("/");
+	}
+);
+
+
+
+
+
+
+
+
+
+
+
 
 //-----------------------------------------------------
 
 //PHẦN SIGN UP
+
+
 
 router.get("/signup", (req, res) => {
 	res.render("admin/users/signup", { data: {} })

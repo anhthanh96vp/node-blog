@@ -7,8 +7,14 @@ import socketio from "socket.io"
 import session from "express-session"
 const MySQLStore = require('express-mysql-session')(session);
 
+import passport from "passport";
 
 const app = express()
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // CẤU HÌNH BODY PARSER
 //cấu hình bodyParser ra dạng json
