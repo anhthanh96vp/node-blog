@@ -8,6 +8,7 @@ router.get("/", (req, res) => {
 	let skills = tableMd.createSkills()
 	let projects = tableMd.createProjects()
 	let users = tableMd.createUsers()
+	let userMxh = tableMd.createUsersMxh()
 	let todos = tableMd.createTodos()
 
 	Promise.all([users, skills, projects, posts, todos])

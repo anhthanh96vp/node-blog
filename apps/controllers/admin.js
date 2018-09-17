@@ -8,44 +8,9 @@ import skillMd from "../models/skill_md"
 import projectMd from "../models/project_md"
 // import helper để đẩy password đã được mã hóa
 import helper from "../helpers/helper"
-
-// import validateEmail để định dạng dữ liệu đầu vào
 import { validateEmail } from "../helpers/validation"
-
-import passport from "passport";
-
 //-----------------------------------------------------
 
-
-router.get("/login/facebook", passport.authenticate("facebook"));
-router.get(
-	"/login/facebook/callback",
-	passport.authenticate("facebook", {
-		// successRedirect: "/",
-		failureRedirect: "/admin/signup",
-		scope: ["email"],
-		session: false
-	}),
-	function (req, res) {
-		// req.session.user = req.user
-		req.session.status = "online";
-		req.session.save();
-		res.redirect("/");
-	}
-);
-
-
-
-
-
-
-
-
-
-
-
-
-//-----------------------------------------------------
 
 //PHẦN SIGN UP
 
@@ -82,40 +47,6 @@ router.post("/signup", (req, res) => {
 	}
 
 	//Khởi tạo trường insert lên Database
-
-	// 	// * KIỂU ĐỒNG BỘ
-
-	// 	//password đã được mã hóa bên file helper
-	// 	let codePassword = helper.hashPassword(user.password);
-
-	// 	//sau đó đẩy vào object json chuẩn bị đẩy lên database
-	// 	user = {
-	// 		email: user.email,
-	// 		password: codePassword,
-	// 		first_name: user.firstname,
-	// 		last_name: user.lastname,
-	// 		created_at: new Date(),
-	// 		updated_at: new Date()
-	// 	};
-
-	// 	//Nếu user đẩy lên khác user nhập vào thì lỗi, thành công thì success
-	// 	let result = userMd.addUser(user);
-
-	// 	//Nếu user đẩy lên khác user nhập vào thì lỗi, thành công thì success
-	// 	//Vì hàm addUser sử dụng promise nên phải sử dụng then catch mới có thể sử dụng được data
-	// 	//then là thành công, catch là bắt lỗi
-	// 	result
-	// 		.then(data => {
-	// 			//Signup Thành công thì nhảy sang signin để có thể đăng nhập
-	// 			res.redirect("/admin/signin");
-	// 		})
-	// 		.catch(err => {
-	// 			res.render("admin/user/signup", {
-	// 				err: "Gặp lỗi khi insert dữ liệu lên DB"
-	// 			});
-
-	// 		});
-	// });
 
 	// *KIỂU BẤT ĐỒNG BỘ
 
@@ -182,39 +113,6 @@ router.post("/signin", (req, res) => {
 			data: { err: "Hãy nhập đúng định dạng email" }
 		})
 	} else {
-		// //**KIỂU ĐỒNG BỘ
-
-		// //Kích hoạt hàm này bằng tham số params.email từ request body
-		// //Có tác dụng tìm kiếm email giống với email nhập vào, kết quả là data
-		// let data = userMd.getUserByEmail(params.email)
-		// if (data) {
-		// 	data.then(users => {
-		// 		//trả về mảng users có email giống params.email
-		// 		//chọn ra user đầu tiên
-		// 		let user = users[0]
-		// 		//So sánh password từ req.body với password phía server đã đc mã hóa
-		// 		//Trong đó params.password là từ req.body
-		// 		//user.password là  lấy từ trên database
-		// 		let status = helper.comparePassword(
-		// 			params.password,
-		// 			user.password
-		// 		)
-		// 		if (status) {
-		// 			res.redirect("/admin/")
-		// 		} else {
-		// 			// req.session.user = user;
-		// 			res.render("admin/user/signin", {
-		// 				data: {
-		// 					err: "Password nhập vào không chính xác"
-		// 				}
-		// 			})
-		// 		}
-		// 	})
-		// } else {
-		// 	res.render("admin/user/signin", {
-		// 		data: { err: "Email bạn nhập vào không chính xác" }
-		// 	})
-		// }
 
 		//**BẤT ĐỒNG BỘ
 
@@ -781,7 +679,6 @@ router.post("/posts/new", (req, res) => {
 
 router.get("/posts/edit/:id", (req, res) => {
 	// check xem nếu đã đăng nhập, lưu dữ liệu vào session thì được quyền truy cập
-
 	if (req.session.user) {
 		if (req.session.user) {
 			let userLogin = req.session.user

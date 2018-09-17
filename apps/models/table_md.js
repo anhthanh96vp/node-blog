@@ -95,6 +95,31 @@ const createUsers = () => {
 	})
 	return promise
 }
+const createUsersMxh = () => {
+	let promise = new Promise((resolve, reject) => {
+		let query = conn.query(
+			`CREATE TABLE IF NOT EXISTS users_mxh(
+			id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+			mxh VARCHAR(255) NOT NULL,
+            access_token VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            avatar VARCHAR(255),
+            first_name VARCHAR(255) NOT NULL,
+            last_name VARCHAR(255) NOT NULL,
+            created_at DATETIME,
+            updated_at DATETIME
+            ) CHARACTER SET=utf8;`,
+			(err, posts) => {
+				if (err) {
+					reject(err)
+				} else {
+					resolve(posts)
+				}
+			}
+		)
+	})
+	return promise
+}
 const createTodos = () => {
 	let promise = new Promise((resolve, reject) => {
 		let query = conn.query(
@@ -124,5 +149,6 @@ module.exports = {
 	createSkills,
 	createProjects,
 	createUsers,
-	createTodos
+	createTodos,
+	createUsersMxh
 }

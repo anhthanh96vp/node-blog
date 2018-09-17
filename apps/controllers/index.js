@@ -8,6 +8,7 @@ router.use("/table", require(__dirname + "/table"))
 router.use("/admin", require(__dirname + "/admin"))
 router.use("/blog", require(__dirname + "/blog"))
 router.use("/todo", require(__dirname + "/todo"))
+router.use("/auth", require(__dirname + "/auth"))
 
 // Tạo 1 router chung cho cả hệ thống
 router.get("/", (req, res) => {
